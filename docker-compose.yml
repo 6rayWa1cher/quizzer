@@ -122,4 +122,4 @@ services:
             - 4200:4200
         volumes:
             - ./forms-gen-angular:/app
-        command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:watch --prefix=/app"
+        command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:dev --prefix=/app"
