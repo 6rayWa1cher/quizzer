@@ -1,4 +1,4 @@
-import { Prisma } from '../client';
+import { Prisma } from '@internal/prisma-forms/client';
 
 
 const complete_from = Prisma.validator<Prisma.FormArgs>()( {
