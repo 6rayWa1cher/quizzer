@@ -17,6 +17,19 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {}
+    "paths": {
+      "rmq/rmq": [
+        "libs/rmq/src"
+      ],
+      "rmq/rmq/*": [
+        "libs/rmq/src/*"
+      ],
+      "prisma-forms/prisma-forms": [
+        "libs/prisma-forms/src"
+      ],
+      "prisma-forms/prisma-forms/*": [
+        "libs/prisma-forms/src/*"
+      ]
+    }
   }
 }

@@ -35,6 +35,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/forms-discord/tsconfig.app.json"
       }
+    },
+    "rmq": {
+      "type": "library",
+      "root": "libs/rmq",
+      "entryFile": "index",
+      "sourceRoot": "libs/rmq/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/rmq/tsconfig.lib.json"
+      }
+    },
+    "prisma-forms": {
+      "type": "library",
+      "root": "libs/prisma-forms",
+      "entryFile": "index",
+      "sourceRoot": "libs/prisma-forms/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/prisma-forms/tsconfig.lib.json"
+      }
     }
   }
 }

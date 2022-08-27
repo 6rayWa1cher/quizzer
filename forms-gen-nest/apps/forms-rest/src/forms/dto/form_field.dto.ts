@@ -1,14 +1,16 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsArray, IsIn, IsString } from 'class-validator';
+import { IsArray, IsIn, IsString, MaxLength } from 'class-validator';
 
 @Exclude()
 export class FormFieldAnyDto {
     @Expose()
     @IsString()
+    @MaxLength( 32 )
     name: string;
 
     @Expose()
     @IsString()
+    @MaxLength( 256 )
     description: string;
 
     @Expose()

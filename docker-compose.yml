@@ -59,11 +59,7 @@ services:
         environment:
             - PORT=8080
             - HOST=0.0.0.0
-            - POSTGRES_HOST=postgres
-            - POSTGRES_PORT=5432
-            - POSTGRES_USER=root
-            - POSTGRES_PASSWORD=root
-            - POSTGRES_DB=test
+            - AMQP_URL=amqp://guest:guest@rabbitmq:5672
         ports:
             - 3000:8080
         volumes:
@@ -87,6 +83,7 @@ services:
                 max-size: "50m"
         environment:
             - DATABASE_URL=postgres://root:root@postgres:5432/test
+            - AMQP_URL=amqp://rabbitmq:5672
         volumes:
             - ./forms-gen-nest:/app
         command: bash -c "echo launching && npm run start:forms-db:dev --prefix=/app"
@@ -106,6 +103,8 @@ services:
         logging:
             options:
                 max-size: "50m"
+        environment:
+            - AMQP_URL=amqp://rabbitmq:5672
         volumes:
             - ./forms-gen-nest:/app
         command: bash -c "echo launching && npm run start:forms-discord:dev --prefix=/app"        

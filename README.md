@@ -1,6 +1,6 @@
 # Description
 
-Learning project for getting familiar with microservises.
+Learning project for getting familiar with microservices.
 
 This is cut version of google forms
 
@@ -20,7 +20,7 @@ Project broken into several pieces:
 
 # Used technologies
 
-## Backend:
+### Backend:
 - NodeJS
 - NestJS
 - RabbitMQ
@@ -29,9 +29,10 @@ Project broken into several pieces:
 - DiscordJS
 - Swagger
 
-## Frontend:
+### Frontend:
 - Angular
 - Angular Material UI
+- Axios
 
 # How to run
 

@@ -1,12 +1,14 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsString, MaxLength, ValidateNested } from 'class-validator';
 import { FormFieldAnyDto, FormFieldDto, FormFieldInputDto, FormFieldSelectDto, FormFieldTextAreaDto } from './form_field.dto';
 
 export class CreateFormDto {
     @IsString()
+    @MaxLength( 32 )
     name: string;
 
     @IsString()
+    @MaxLength( 512 )
     description: string;
 
     @ValidateNested( { each: true } )
