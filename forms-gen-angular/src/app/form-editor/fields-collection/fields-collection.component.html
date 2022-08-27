@@ -1,0 +1,28 @@
+<div *ngFor="let field of fields; index as i" class="form-field-container mat-elevation-z2">
+    <form-editor-field-input 
+        *ngIf="field.type === 'input'" 
+        [(name)]="field.name" 
+        (nameChange)="fields_updated()"
+        [(description)]="field.description" 
+        (descriptionChange)="fields_updated()"
+        (close_request)="remove_field(i)"
+    ></form-editor-field-input>
+    <form-editor-field-textarea 
+        *ngIf="field.type === 'textarea'" 
+        [(name)]="field.name" 
+        (nameChange)="fields_updated()"
+        [(description)]="field.description" 
+        (descriptionChange)="fields_updated()"
+        (close_request)="remove_field(i)"
+    ></form-editor-field-textarea>
+    <form-editor-field-select 
+        *ngIf="field.type === 'select'" 
+        [(name)]="field.name" 
+        (nameChange)="fields_updated()"
+        [(description)]="field.description" 
+        (descriptionChange)="fields_updated()"
+        (optionsChange)="field.options = $event; fields_updated()"
+        (close_request)="remove_field(i)"
+    ></form-editor-field-select>
+</div>
+<form-editor-new-field (field_creation)="append_field($event)"></form-editor-new-field>

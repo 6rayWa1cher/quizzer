@@ -1,0 +1,41 @@
+<mat-card>
+    <mat-card-title class="card-title">
+        <mat-form-field class="input-name" appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Book selection" [(ngModel)]="name" (ngModelChange)="name_update($event)">
+        </mat-form-field>
+        <button mat-icon-button class="example-icon" matTooltip="Delete form field" (click)="close_click()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <div class="container-wrapper">
+            <div class="container">
+                <mat-form-field class="description-textarea" appearance="fill">
+                    <mat-label>Description</mat-label>
+                    <textarea 
+                        matInput 
+                        placeholder="What would you like to read next?" 
+                        [(ngModel)]="description" 
+                        (ngModelChange)="description_update($event)"
+                    ></textarea>
+                </mat-form-field>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="container">
+                <mat-list role="list">
+                    <mat-list-item *ngFor="let prop of options; index as i">
+                        <input matInput placeholder="Option {{i + 1}}" [(ngModel)]="prop.data" class="option-input" (ngModelChange)="options_update()">
+                        <button mat-icon-button class="example-icon" matTooltip="Delete form options" (click)="remove_option(i)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <button mat-button color="accent" (click)="append_option()">Add property</button>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

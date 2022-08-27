@@ -1,0 +1,24 @@
+<mat-card>
+    <mat-card-title>
+        <div class="mat-title">
+            {{name}}
+        </div>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <div class="container-wrapper">
+            <div class="container">
+                <article>
+                    {{description}}
+                </article>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="container">
+                <mat-form-field class="input-textarea" appearance="fill">
+                    <mat-label>Textarea</mat-label>
+                    <textarea matInput [(ngModel)]="data" (ngModelChange)="data_update($event)"></textarea>
+                </mat-form-field>
+            </div>
+        </div>        
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,3 @@
+<form-editor-header [(name)]="form.name" [(description)]="form.description"></form-editor-header>
+<form-editor-fields-collection [(fields)]="form.fields"></form-editor-fields-collection>
+<form-editor-footer (create_request)="create_form()" [closable]="closable" (close_request)="close_request.emit()"></form-editor-footer>

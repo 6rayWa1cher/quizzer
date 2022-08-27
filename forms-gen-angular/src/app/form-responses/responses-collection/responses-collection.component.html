@@ -1,0 +1,3 @@
+<div *ngFor="let response of responses; index as i" class="response-container mat-elevation-z2">
+    <form-responses-response-box [response]="response" name="Response #{{i + 1}}"></form-responses-response-box>
+</div>

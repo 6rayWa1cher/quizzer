@@ -1,0 +1,125 @@
+version: "3.8"
+services:
+    nest-npm-i:
+        image: node:16
+        container_name: nest-npm-i
+        restart: "no"
+        volumes:
+            - ./forms-gen-nest:/app
+        logging:
+            options:
+                max-size: "50m"
+        command: bash -c "echo installing packages && npm install --prefix=/app"
+
+
+    postgres:
+        image: 'postgres:14.4'
+        container_name: forms-gen-db-postgres
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=test
+        volumes:
+            - ./db-data/:/var/lib/postgresql/data/
+    
+
+    rabbitmq:
+        image: 'rabbitmq:3.10.7-management'
+        container_name: forms-gen-rabbitmq
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+            - ./rabbitmq-data/mnesia/:/var/lib/rabbitmq/mnesia/
+
+
+    forms-rest:
+        image: node:16
+        container_name: forms-gen-rest
+        depends_on:
+            nest-npm-i:
+                condition: service_completed_successfully
+            rabbitmq:
+                condition: service_started
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        environment:
+            - PORT=8080
+            - HOST=0.0.0.0
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=5432
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=test
+        ports:
+            - 3000:8080
+        volumes:
+            - ./forms-gen-nest:/app
+        command: bash -c "echo launching && npm run start:forms-rest:dev --prefix=/app"
+
+
+    forms-db:
+        image: node:16
+        container_name: forms-gen-db
+        depends_on:
+            nest-npm-i:
+                condition: service_completed_successfully
+            postgres:
+                condition: service_started
+            rabbitmq:
+                condition: service_started
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        environment:
+            - DATABASE_URL=postgres://root:root@postgres:5432/test
+        volumes:
+            - ./forms-gen-nest:/app
+        command: bash -c "echo launching && npm run start:forms-db:dev --prefix=/app"
+
+
+    forms-discord:
+        image: node:16
+        container_name: forms-gen-discord
+        depends_on:
+            nest-npm-i:
+                condition: service_completed_successfully
+            postgres:
+                condition: service_started
+            rabbitmq:
+                condition: service_started
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        volumes:
+            - ./forms-gen-nest:/app
+        command: bash -c "echo launching && npm run start:forms-discord:dev --prefix=/app"        
+
+
+    angular:
+        image: node:16
+        container_name: forms-gen-angular
+        restart: "no"
+        logging:
+            options:
+                max-size: "50m"
+        ports:
+            - 4200:4200
+        volumes:
+            - ./forms-gen-angular:/app
+        command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:watch --prefix=/app"

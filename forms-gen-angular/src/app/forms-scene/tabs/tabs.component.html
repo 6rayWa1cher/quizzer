@@ -1,0 +1,16 @@
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Preview">
+        <ng-template matTabContent>
+            <div class="container">
+                <form-view-window [form_id]="form_id"></form-view-window>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Responses">
+        <ng-template matTabContent>
+            <div class="container">
+                <form-responses-window [form_id]="form_id"></form-responses-window>
+            </div>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,13 @@
+<div class="centered-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<ng-container *ngIf="!submitted && !loading">
+    <form-view-header [name]="form.name" [description]="form.description" [created_at]="form.created_at" [id]="form_id"></form-view-header>
+    <form-view-fields-collection [fields]="form.fields" #fields></form-view-fields-collection>
+    <form-view-footer [closable]="false" (create_request)="form_response(fields.responses)"></form-view-footer>
+</ng-container>
+
+<ng-container *ngIf="submitted">
+    <form-view-submitted></form-view-submitted>
+</ng-container>

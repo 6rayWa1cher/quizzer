@@ -1,0 +1,32 @@
+<mat-card>
+    <mat-card-title>
+        <div class="title-container">
+            <div>
+                {{name}}
+            </div>
+            <div class="separator"></div>
+            <div class="mat-subheading-2">
+                Created at: {{response.created_at.toLocaleString('ru')}}
+            </div>
+        </div>
+    </mat-card-title>
+    <mat-card-content>
+        <table mat-table [dataSource]="response.fields" class="table">
+            <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef class="tabe_index_column_header"> Field # </th>
+                <td mat-cell *matCellDef="let element; let i = index;"> {{i}} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="tabe_column_header"> Field name </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef class="tabe_column_header"> Data </th>
+                <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayed_columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayed_columns;"></tr>
+        </table>
+    </mat-card-content>
+</mat-card>

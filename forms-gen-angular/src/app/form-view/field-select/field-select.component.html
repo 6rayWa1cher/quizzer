@@ -1,0 +1,25 @@
+<mat-card>
+    <mat-card-title>
+        <div class="mat-title">
+            {{name}}
+        </div>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <div class="container-wrapper">
+            <div class="container">
+                <article>
+                    {{description}}
+                </article>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="container">
+                <mat-radio-group class="radio-group" [(ngModel)]="data" (ngModelChange)="data_update($event)">
+                    <mat-radio-button class="radio-button" *ngFor="let prop of options" [value]="prop">
+                        {{prop}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,23 @@
+<div class="container mat-elevation-z2">
+    <mat-card>
+        <mat-card-title>
+            <div class="title-container">
+                <div>
+                    {{name}}
+                </div>
+                <div class="separator"></div>
+                <div class="mat-subheading-2">
+                    Created at: {{created_at.toLocaleString('ru')}}
+                </div>
+            </div>
+        </mat-card-title>
+        <mat-card-content>
+            <article>
+                {{description}}
+            </article>
+        </mat-card-content>
+        <mat-card-actions *ngIf="id">
+            Share url: <a href="{{share_base_url + '/form/' + id}}">{{share_base_url + '/form/' + id}}</a>
+        </mat-card-actions>
+    </mat-card>
+</div>

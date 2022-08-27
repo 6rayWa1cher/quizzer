@@ -1,0 +1,32 @@
+<mat-sidenav-container class="container">
+    <mat-sidenav #side mode="side" opened class="side">
+        <mat-toolbar color="primary">
+            Forms
+        </mat-toolbar>
+        <div class="centered-container">
+            <button mat-raised-button color="accent" (click)="create_new_form()">Create new</button>
+        </div>
+        <div class="centered-container" *ngIf="loading">
+            <mat-spinner></mat-spinner>
+        </div>
+        <mat-selection-list #forms [multiple]="false" class="side-bar" (selectionChange)="selection_change(forms.selectedOptions.selected[0]?.value)">
+            <mat-list-option *ngFor="let form of forms_list_short" [value]="form.id">
+                {{form.name}}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <button mat-icon-button class="example-icon" (click)="side.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span>Editor</span>
+        </mat-toolbar>
+        <ng-container *ngIf="selected_id">
+            <forms-scene-tabs [form_id]="selected_id"></forms-scene-tabs>
+        </ng-container>
+        <ng-container *ngIf="!selected_id">
+            <p class="attention_text">Please, select or create form to view in left side menu</p>
+        </ng-container>
+    </mat-sidenav-content>
+</mat-sidenav-container>

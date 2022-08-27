@@ -1,0 +1,21 @@
+<div *ngFor="let field of fields; index as i" class="form-field-container mat-elevation-z2">
+    <form-view-field-input 
+        *ngIf="field.type === 'input'" 
+        [name]="field.name" 
+        [description]="field.description"
+        [(data)]="responses[i].data"
+    ></form-view-field-input>
+    <form-view-field-textarea 
+        *ngIf="field.type === 'textarea'" 
+        [name]="field.name" 
+        [description]="field.description" 
+        [(data)]="responses[i].data"
+    ></form-view-field-textarea>
+    <form-view-field-select 
+        *ngIf="field.type === 'select'" 
+        [name]="field.name" 
+        [description]="field.description" 
+        [options]="field.options"
+        [(data)]="responses[i].data"
+    ></form-view-field-select>
+</div>
