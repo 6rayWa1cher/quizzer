@@ -1,6 +1,7 @@
 export type FormField = FromFieldInput | FromFieldTextArea | FromFieldSelect;
 
 interface FormFieldAny {
+    id?: number;
     name: string;
     description: string;
     type: string;

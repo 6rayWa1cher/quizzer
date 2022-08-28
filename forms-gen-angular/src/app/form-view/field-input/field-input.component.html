@@ -16,7 +16,7 @@
             <div class="container">
                 <mat-form-field class="input-field" appearance="fill" >
                     <mat-label>Input</mat-label>
-                    <input matInput [(ngModel)]="data" (ngModelChange)="data_update($event)">
+                    <input matInput [(ngModel)]="data" maxlength="256" (ngModelChange)="data_update($event)">
                 </mat-form-field>
             </div>
         </div>

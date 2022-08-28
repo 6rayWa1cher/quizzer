@@ -1,4 +1,5 @@
 export interface FormFieldResponse {
-    name: string;
+    form_field_id: number;
+    name?: string;
     data: string;
 }

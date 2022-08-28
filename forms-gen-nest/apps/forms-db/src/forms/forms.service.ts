@@ -59,11 +59,11 @@ export class FormsService {
                 create_form_response_dto.fields,
                 _.map( form.fields, ( val ) => {
                     return {
-                        id: val.id,
+                        form_field_id: val.id,
                         data: '',
                     };
                 } ),
-                'id',
+                'form_field_id',
             );
 
             const fields_to_create = _.map( intersection_fields, ( val ) => {

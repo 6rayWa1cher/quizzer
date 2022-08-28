@@ -3,32 +3,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 
-
 @Injectable( {
     providedIn: 'root',
 } )
-export class JsonRpcService {
-    id: number = 0;
-
+export class RestService {
     constructor ( private snack_bar: MatSnackBar ) { }
 
-    send_request ( data: any, method: string ) {
+    send_request ( data: any, method: 'GET' | 'POST' | 'PUT' | 'DELETE', path: string ) {
         return axios( {
-            method: 'POST',
+            method,
             baseURL: environment.api_url,
-            url: 'json-rpc',
-            data: {
-                jsonrpc: '2.0',
-                method: method,
-                params: data,
-                id: this.id++,
-            },
+            url: path,
+            data,
         } )
             .then( ( res ) => {
-                return res.data.result;
+                return res.data;
             } )
             .catch( ( err ) => {
-                this.snack_bar.open( 'Error occured while sending request', 'close', {
+                this.snack_bar.open( `Error occured while sending request ${err?.response?.status || ''}`, 'close', {
                     duration: 5000,
                 } );
                 console.log( err );

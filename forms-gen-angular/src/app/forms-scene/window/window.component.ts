@@ -24,6 +24,7 @@ export class WindowComponent implements OnInit {
     ngOnInit (): void {
         this.forms_scene_service.get_froms_short()
             .then( ( val ) => {
+                console.log( val );
                 this.forms_list_short = val;
             } )
             .finally( () => {

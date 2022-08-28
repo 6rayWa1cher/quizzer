@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { JsonRpcService } from '../json-rpc.service';
+import { RestService } from '../rest.service';
 import { CreateFormDto } from '../types/create_form_dto';
 
 @Injectable()
 export class FormEditorService {
-    constructor ( private json_rpc_service: JsonRpcService ) { }
+    constructor ( private rest_service: RestService ) { }
 
     create_form ( create_from_dto: CreateFormDto ) {
-        return this.json_rpc_service.send_request( create_from_dto, 'forms' );
+        return this.rest_service.send_request( create_from_dto, 'POST', 'form' );
     }
 }
