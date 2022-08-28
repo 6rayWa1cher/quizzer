@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import * as _ from 'lodash';
-import { CompleteForm, CompleteFormResponse, PrismaFormsService } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm } from 'prisma-forms/prisma-forms';
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 
@@ -71,7 +71,7 @@ export class FormsService {
                     form_field: {
                         connect: {
                             id_form_id: {
-                                id: val.id,
+                                id: val.form_field_id,
                                 form_id: form.id,
                             },
                         },
@@ -133,28 +133,10 @@ export class FormsService {
         } );
     }
 
-    async get_all_forms (): Promise<Array<CompleteForm>> {
+    async get_all_forms (): Promise<Array<ShortForm>> {
         return this.prisma.form.findMany( {
             orderBy: {
                 name: 'asc',
-            },
-            include: {
-                fields: {
-                    orderBy: {
-                        // ordering by autoinrement field so fields in same order as they were inserted.
-                        // Later seperate sort_order field might be added
-                        id: 'asc',
-                    },
-                    include: {
-                        options: {
-                            orderBy: {
-                                // ordering by autoinrement field so fields in same order as they were inserted.
-                                // Later seperate sort_order field might be added
-                                id: 'asc',
-                            },
-                        },
-                    },
-                },
             },
         } );
     }

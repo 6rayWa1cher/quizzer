@@ -13,6 +13,10 @@ const complete_from = Prisma.validator<Prisma.FormArgs>()( {
 
 export type CompleteForm = Prisma.FormGetPayload<typeof complete_from>
 
+const short_from = Prisma.validator<Prisma.FormArgs>()( {} );
+
+export type ShortForm = Prisma.FormGetPayload<typeof short_from>
+
 const complete_from_response = Prisma.validator<Prisma.FormResponseArgs>()( {
     include: {
         fields: {
