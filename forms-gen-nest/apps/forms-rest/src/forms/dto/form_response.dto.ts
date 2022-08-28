@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import * as _ from 'lodash';
-import { IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 @Exclude()
 export class FormResponseDto {
@@ -28,9 +28,9 @@ export class FormResponseDto {
 
 @Exclude()
 export class FormFieldResponseDto {
-    @IsString()
+    @IsInt()
     @Expose()
-    name: string;
+    id: number;
 
     @IsString()
     @Expose()
