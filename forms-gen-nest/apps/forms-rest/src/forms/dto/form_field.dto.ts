@@ -6,6 +6,10 @@ import { CompleteForm } from 'prisma-forms/prisma-forms';
 
 @Exclude()
 export class FormFieldAnyDto {
+    @ApiProperty( { required: false, description: 'It is not requiered for input, but always returned' } )
+    @Expose()
+    id: string;
+
     @ApiProperty()
     @Expose()
     @IsString()
@@ -66,7 +70,7 @@ export class FormFieldSelectDto extends FormFieldAnyDto {
 
     constructor ( data: CompleteForm['fields'][0] ) {
         super( data );
-        this.options = _.map( data.options, ( elem ) => elem.value );
+        this.options = _.map( data?.options, ( elem ) => elem.value );
     }
     def () { }
 }

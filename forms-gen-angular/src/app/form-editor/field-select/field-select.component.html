@@ -2,7 +2,7 @@
     <mat-card-title class="card-title">
         <mat-form-field class="input-name" appearance="fill">
             <mat-label>Name</mat-label>
-            <input matInput placeholder="Book selection" [(ngModel)]="name" (ngModelChange)="name_update($event)">
+            <input matInput placeholder="Book selection" [(ngModel)]="name" maxlength="32" (ngModelChange)="name_update($event)">
         </mat-form-field>
         <button mat-icon-button class="example-icon" matTooltip="Delete form field" (click)="close_click()">
             <mat-icon>delete</mat-icon>
@@ -17,6 +17,7 @@
                     <textarea 
                         matInput 
                         placeholder="What would you like to read next?" 
+                        maxlength="256"
                         [(ngModel)]="description" 
                         (ngModelChange)="description_update($event)"
                     ></textarea>
@@ -26,7 +27,7 @@
             <div class="container">
                 <mat-list role="list">
                     <mat-list-item *ngFor="let prop of options; index as i">
-                        <input matInput placeholder="Option {{i + 1}}" [(ngModel)]="prop.data" class="option-input" (ngModelChange)="options_update()">
+                        <input matInput placeholder="Option {{i + 1}}" maxlength="256" [(ngModel)]="prop.data" class="option-input" (ngModelChange)="options_update()">
                         <button mat-icon-button class="example-icon" matTooltip="Delete form options" (click)="remove_option(i)">
                             <mat-icon>close</mat-icon>
                         </button>

@@ -16,14 +16,14 @@ export class FieldsCollectionComponent implements OnInit, OnChanges {
 
     ngOnInit (): void {
         this.responses = _.map( this.fields, ( field ) => {
-            return { name: field.name, data: '' };
+            return { form_field_id: field.id || -1, data: '' };
         } );
     }
 
     ngOnChanges ( changes: SimpleChanges ): void {
         if ( 'fields' in changes ) {
             this.responses = _.map( this.fields, ( field ) => {
-                return { name: field.name, data: '' };
+                return { form_field_id: field.id || -1, data: '' };
             } );
         }
     }

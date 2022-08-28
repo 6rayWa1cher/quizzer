@@ -23,7 +23,7 @@ model Form {
 
 model FormField {
     id          Int                 @default(autoincrement())
-    form        Form                @relation(fields: [form_id], references: [id])
+    form        Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
     form_id     Int
     name        String              @default("") @db.VarChar(32)
     description String              @default("") @db.VarChar(256)
@@ -36,7 +36,7 @@ model FormField {
 
 model FormFieldOption {
     id            Int       @id @default(autoincrement())
-    form_field    FormField @relation(fields: [form_field_id, form_id], references: [id, form_id])
+    form_field    FormField @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
     form_id       Int
     form_field_id Int
     value         String    @default("") @db.VarChar(64)
@@ -44,7 +44,7 @@ model FormFieldOption {
 
 model FormResponse {
     id         Int                 @default(autoincrement())
-    form       Form                @relation(fields: [form_id], references: [id])
+    form       Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
     form_id    Int
     fields     FormResponseField[]
     created_at DateTime            @default(now())
@@ -54,10 +54,10 @@ model FormResponse {
 
 model FormResponseField {
     id               Int          @default(autoincrement())
-    form_field       FormField    @relation(fields: [form_field_id, form_id], references: [id, form_id])
+    form_field       FormField    @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
     form_field_id    Int
     form_id          Int
-    form_response    FormResponse @relation(fields: [form_response_id, form_id], references: [id, form_id])
+    form_response    FormResponse @relation(fields: [form_response_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
     form_response_id Int
     data            String       @default("") @db.VarChar(256)
 

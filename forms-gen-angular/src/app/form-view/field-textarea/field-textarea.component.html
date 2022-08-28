@@ -16,7 +16,7 @@
             <div class="container">
                 <mat-form-field class="input-textarea" appearance="fill">
                     <mat-label>Textarea</mat-label>
-                    <textarea matInput [(ngModel)]="data" (ngModelChange)="data_update($event)"></textarea>
+                    <textarea matInput [(ngModel)]="data" maxlength="256" (ngModelChange)="data_update($event)"></textarea>
                 </mat-form-field>
             </div>
         </div>        

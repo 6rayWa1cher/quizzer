@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import * as _ from 'lodash';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CompleteFormResponse } from 'prisma-forms/prisma-forms';
 
@@ -45,11 +45,11 @@ export class FormFieldResponseDto {
 
     @ApiProperty()
     @IsString()
+    @MaxLength( 256 )
     @Expose()
     data: string;
 
     constructor ( data: CompleteFormResponse['fields'][0] ) {
-        console.log( data );
         Object.assign( this, data );
         this.name = data?.form_field.name;
     }
