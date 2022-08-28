@@ -1,7 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { RabbitRPC, RabbitPayload } from '@golevelup/nestjs-rabbitmq';
 import { EXCHANGES } from 'rmq/rmq';
-import { DEFAULT_QUEUE_NAME } from '../constants';
 import { FormsService } from './forms.service';
 import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/prisma-forms';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
@@ -26,7 +25,7 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.response.get_all',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: DEFAULT_QUEUE_NAME,
+        queue: 'queue:form.response.get_all',
     } )
     async get_all_responses ( @RabbitPayload() form_id: number ): Promise<RmqOk<Array<CompleteFormResponse>>> {
         return this.default_rmq_handler( this.forms_service.get_all_responses( form_id ) );
@@ -35,7 +34,7 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.response.post',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: DEFAULT_QUEUE_NAME,
+        queue: 'queue:form.response.post',
     } )
     async create_response ( @RabbitPayload() data: { form_id: number, create_form_response_dto: CreateFormResponseDto } ) {
         return this.default_rmq_handler( this.forms_service.create_response( data.form_id, data.create_form_response_dto ) );
@@ -44,16 +43,16 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.get_by_id',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: DEFAULT_QUEUE_NAME,
+        queue: 'queue:form.get_by_id',
     } )
     async get_form_by_id ( @RabbitPayload() id: number ): Promise<RmqOk<CompleteForm | null>> {
         return this.default_rmq_handler( this.forms_service.get_form_by_id( id ) );
     }
 
     @RabbitRPC( {
-        routingKey: 'form.get_all.',
+        routingKey: 'form.get_all',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: DEFAULT_QUEUE_NAME,
+        queue: 'queue:form.get_all',
     } )
     async get_all_forms (): Promise<RmqOk<Array<ShortForm>>> {
         return this.default_rmq_handler( this.forms_service.get_all_forms() );
@@ -62,7 +61,7 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.post',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: DEFAULT_QUEUE_NAME,
+        queue: 'queue:form.post',
     } )
     async create_form ( @RabbitPayload() data: CreateFormDto ) {
         return this.default_rmq_handler( this.forms_service.create_form( data ) );

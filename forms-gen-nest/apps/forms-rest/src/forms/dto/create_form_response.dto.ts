@@ -4,7 +4,7 @@ import { IsArray, ValidateNested } from 'class-validator';
 import { FormFieldResponseDto } from './form_response.dto';
 
 export class CreateFormResponseDto {
-    @ApiProperty()
+    @ApiProperty( { type: () => [FormFieldResponseDto] } )
     @ValidateNested( { each: true } )
     @Type( () => FormFieldResponseDto )
     @IsArray()

@@ -18,22 +18,6 @@ export class FormsService {
         }
     }
 
-    test () {
-        const message = 'ok?';
-        console.log( 'sending ' );
-        this.amqp_connection.request( {
-            exchange: EXCHANGES.SHARED_FORMS,
-            routingKey: 'test',
-            payload: 'ok?',
-            timeout: 5000,
-        } ).then( ( val ) => {
-            console.log( 'got answer', val );
-        } );
-        console.log( 'sent' );
-        return 'Hello';
-    }
-
-
     /**
      * Warning: nonlocal function. Calls similar function from form-db service
      *

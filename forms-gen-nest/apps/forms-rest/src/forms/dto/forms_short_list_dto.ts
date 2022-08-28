@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { ShortForm } from 'prisma-forms/prisma-forms';
 
 
 @Exclude()
@@ -16,7 +17,7 @@ export class FormDescriptionShortDto {
     @Expose()
     description: string;
 
-    constructor ( data: unknown ) {
+    constructor ( data: ShortForm ) {
         Object.assign( this, data );
     }
 }

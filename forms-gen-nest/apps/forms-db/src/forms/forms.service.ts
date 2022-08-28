@@ -71,7 +71,7 @@ export class FormsService {
                     form_field: {
                         connect: {
                             id_form_id: {
-                                id: val.id,
+                                id: val.form_field_id,
                                 form_id: form.id,
                             },
                         },
