@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import * as _ from 'lodash';
 import { FormFieldDto, FormFieldAnyDto, FormFieldInputDto, FormFieldSelectDto, FormFieldTextAreaDto } from './form_field.dto';
@@ -5,15 +6,19 @@ import { FormFieldDto, FormFieldAnyDto, FormFieldInputDto, FormFieldSelectDto, F
 
 @Exclude()
 export class FormDto {
+    @ApiProperty()
     @Expose()
     id: number;
 
+    @ApiProperty()
     @Expose()
     name: string;
 
+    @ApiProperty()
     @Expose()
     description: string;
 
+    @ApiProperty( { type: () => FormFieldAnyDto } )
     @Expose()
     @Type( () => FormFieldAnyDto, {
         discriminator: {
@@ -28,6 +33,7 @@ export class FormDto {
     } )
     fields: Array<FormFieldDto>;
 
+    @ApiProperty()
     @Expose()
     created_at: number;
 
