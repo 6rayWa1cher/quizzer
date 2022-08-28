@@ -51,6 +51,7 @@ export class FormFieldSelectDto extends FormFieldAnyDto {
     @Expose()
     @IsArray()
     @IsString( { each: true } )
+    @MaxLength( 64, { each: true } )
     options: Array<string>;
 
     constructor ( data: FormFieldSelectDto ) {
