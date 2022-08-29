@@ -1,6 +1,10 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { RabbitPayload, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Sse, MessageEvent } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as _ from 'lodash';
+import { CompleteForm } from 'prisma-forms/prisma-forms';
+import { EXCHANGES } from 'rmq/rmq';
+import { finalize, interval, map, Observable } from 'rxjs';
 import { CreateFormDto } from './dto/create_form.dto';
 import { CreateFormResponseDto } from './dto/create_form_response.dto';
 import { NotFoundExceptionDto } from './dto/exceptions/not_found_exception.dto';
@@ -8,12 +12,16 @@ import { FormDto } from './dto/form.dto';
 import { FormDescriptionShortDto } from './dto/forms_short_list_dto';
 import { FormResponseDto } from './dto/form_response.dto';
 import { FormsService } from './forms.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 
 @ApiTags( 'Forms' )
 @Controller( 'form' )
 export class FormsController {
-    constructor ( private forms_service: FormsService ) { }
+    constructor (
+        private forms_service: FormsService,
+        private event_emitter: EventEmitter2,
+    ) { }
 
     @ApiOperation( { summary: 'Returns all responses for specified form' } )
     @ApiOkResponse( { type: [FormResponseDto] } )
@@ -58,5 +66,17 @@ export class FormsController {
     @Post()
     async create_form ( @Body() create_form_dto: CreateFormDto ): Promise<void> {
         return this.forms_service.create_form( create_form_dto );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.created',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-rest:form.created',
+    } )
+    async form_created ( @RabbitPayload() data: CompleteForm ) {
+        this.event_emitter.emit( 'sse.forward', {
+            type: 'form.created',
+            data: new FormDescriptionShortDto( data ),
+        } );
     }
 }

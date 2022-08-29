@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import * as _ from 'lodash';
 import { lastValueFrom } from 'rxjs';
 import { FormDescriptionShort } from 'src/app/types/form_description_short';
 import { FormEditorWrapperComponent } from '../form-editor-wrapper/form-editor-wrapper.component';
@@ -26,6 +27,14 @@ export class WindowComponent implements OnInit {
             .then( ( val ) => {
                 console.log( val );
                 this.forms_list_short = val;
+                this.forms_scene_service.enable_sse_listeners();
+                this.forms_scene_service.update_todo_value_subject.subscribe( {
+                    next: ( val ) => {
+                        console.log( 'Form added', val );
+                        this.forms_list_short.push( val );
+                        console.log( this.forms_list_short );
+                    },
+                } );
             } )
             .finally( () => {
                 this.loading = false;
@@ -38,9 +47,9 @@ export class WindowComponent implements OnInit {
             position: { top: '5vh' },
             maxHeight: '90vh',
         } ).afterClosed() ).then( () => {
-            this.forms_scene_service.get_froms_short().then( ( val ) => {
-                this.forms_list_short = val;
-            } );
+            // this.forms_scene_service.get_froms_short().then( ( val ) => {
+            //     this.forms_list_short = val;
+            // } );
         } );
     }
 

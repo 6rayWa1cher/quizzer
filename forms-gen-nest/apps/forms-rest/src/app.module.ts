@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FormsModule } from './forms/forms.module';
 import { LoggerMiddleware } from './logger.middleware';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module( {
     imports: [
@@ -15,6 +16,10 @@ import { LoggerMiddleware } from './logger.middleware';
             load: [shared_configuration, configuration]
         } ),
         FormsModule,
+        EventEmitterModule.forRoot( {
+            maxListeners: 50,
+            verboseMemoryLeak: true
+        } ),
     ],
     controllers: [AppController],
     providers: [AppService],

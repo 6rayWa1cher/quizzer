@@ -1,6 +1,6 @@
 export default () => ( {
     port: process.env.PORT || 3000,
     host: process.env.HOST || '0.0.0.0',
-    rmq_handlers: false,
+    rmq_handlers: true,
 } );
 

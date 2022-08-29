@@ -39,6 +39,7 @@
                 "FunctionExpression": false
             }
         }],
-        "linebreak-style": "off"
+        "linebreak-style": "off",
+        "valid-jsdoc": "off"
     }
 }
