@@ -1,6 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { channel } from 'diagnostics_channel';
+import { FormDto } from 'apps/forms-rest/src/forms/dto/form.dto';
+import { FormResponseDto } from 'apps/forms-rest/src/forms/dto/form_response.dto';
+import { classToClassFromExist, classToPlain, plainToClass } from 'class-transformer';
 import { CategoryChannel, ChannelType, Guild, TextChannel } from 'discord.js';
 import { CompleteForm, CompleteFormResponse } from 'prisma-forms/prisma-forms';
 import { DiscordService } from '../../../../libs/discord/src/index'; // strangly nest cants resolve exactly discrod alias
@@ -46,16 +48,16 @@ export class FormsService implements OnModuleInit {
     }
 
     async onModuleInit () {
-        await this.find_or_create_notification_category( await this.find_guild() );
+        this.notification_category_channel = await this.find_or_create_notification_category( await this.find_guild() );
     }
 
     private form_to_channel_name ( data: CompleteForm ) {
-        return `${data.id} - ${data.name}`;
+        return `${data.id}-${data.name}`;
     }
 
     private get_text_channel_by_form_id ( id: number ): TextChannel | null {
         for ( const [_, channel] of this.notification_category_channel.children.cache ) {
-            if ( channel.type === ChannelType.GuildText && channel.name.startsWith( `${id} - ` ) ) {
+            if ( channel.type === ChannelType.GuildText && channel.name.startsWith( `${id}-` ) ) {
                 return channel;
             }
         }
@@ -65,7 +67,7 @@ export class FormsService implements OnModuleInit {
     async create_channel_for_notification ( data: CompleteForm ) {
         await this.notification_category_channel.children.create( { name: this.form_to_channel_name( data ), type: ChannelType.GuildText } )
             .then( async ( channel ) => {
-                await ( await channel.send( '```' + JSON.stringify( data, null, 2 ) + '```' ) ).pin()
+                await ( await channel.send( '```' + JSON.stringify( classToPlain( new FormDto( data ) ), null, 2 ) + '```' ) ).pin()
                     .then( () => {
                         this.logger.log( `Created channel for form with id "${data.id}"` );
                     } );
@@ -77,7 +79,7 @@ export class FormsService implements OnModuleInit {
         if ( channel === null ) {
             throw new Error( `No channel for form id "${data.form_id}" was found` );
         }
-        await channel.send( '```' + JSON.stringify( data, null, 2 ) + '```' )
+        await channel.send( '```' + JSON.stringify( classToPlain( new FormResponseDto( data ) ), null, 2 ) + '```' )
             .then( () => {
                 this.logger.log( `Sent message for response with id "${data.id}"` );
             } );

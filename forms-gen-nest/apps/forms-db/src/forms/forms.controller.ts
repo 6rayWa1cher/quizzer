@@ -29,6 +29,9 @@ export class FormsController {
         routingKey: 'form.response.get_all',
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.response.get_all',
+        queueOptions: {
+            durable: false,
+        }
     } )
     async get_all_responses ( @RabbitPayload() form_id: number ): Promise<RmqOk<Array<CompleteFormResponse>>> {
         return this.default_rmq_handler( this.forms_service.get_all_responses( form_id ) );
@@ -42,7 +45,7 @@ export class FormsController {
     async create_response ( @RabbitPayload() data: { form_id: number, create_form_response_dto: CreateFormResponseDto } ) {
         return this.default_rmq_handler(
             this.forms_service.create_response( data.form_id, data.create_form_response_dto )
-                .then( ( val ) => {
+                .then( ( val: CompleteFormResponse | null ) => {
                     if ( val !== null ) {
                         this.amqp_connection.publish(
                             EXCHANGES.SHARED_FORMS,
@@ -59,6 +62,9 @@ export class FormsController {
         routingKey: 'form.get_by_id',
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.get_by_id',
+        queueOptions: {
+            durable: false,
+        }
     } )
     async get_form_by_id ( @RabbitPayload() id: number ): Promise<RmqOk<CompleteForm | null>> {
         return this.default_rmq_handler( this.forms_service.get_form_by_id( id ) );
@@ -68,6 +74,9 @@ export class FormsController {
         routingKey: 'form.get_all',
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.get_all',
+        queueOptions: {
+            durable: false,
+        }
     } )
     async get_all_forms (): Promise<RmqOk<Array<ShortForm>>> {
         return this.default_rmq_handler( this.forms_service.get_all_forms() );

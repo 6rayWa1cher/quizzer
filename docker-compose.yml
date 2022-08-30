@@ -91,7 +91,7 @@ services:
             - AMQP_URL=amqp://rabbitmq:5672
         volumes:
             - ./forms-gen-nest:/app
-        command: bash -c "echo launching && npm run start:forms-db:dev --prefix=/app"
+        command: bash -c "echo mifrating && npm run prisma:forms-db:migrate --prefix=/app && echo launching && npm run start:forms-db:dev --prefix=/app"
 
 
     forms-discord:

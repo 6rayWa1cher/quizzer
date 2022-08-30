@@ -1,4 +1,4 @@
-import * as discord_bot from './discord_bot.json';
+import * as discord_bot from './discord_bot';
 
 export default () => ( {
     rmq_handlers: true,
