@@ -15,8 +15,10 @@ Workflow:
 Project broken into several pieces:
 - ```forms-gen-nest/apps/forms-rest``` - service for communicating with clients via rest api. Forwards calls to other services via rabbitmq
 - ```forms-gen-nest/apps/forms-db``` - service responsible for communication with db and creation of forms and responses
-- ```forms-gen-nest/apps/forms-discord``` - service responsible for managing discord server
+- ```forms-gen-nest/apps/forms-discord``` - service responsible for managing discord guild
 - ```forms-gen-angular``` - frontend. Pretty strait forward
+
+Each service has it's own README with a bit more info
 
 # Used technologies
 
@@ -28,6 +30,7 @@ Project broken into several pieces:
 - Prisma
 - DiscordJS
 - Swagger
+- Lodash
 
 ### Frontend:
 - Angular
@@ -51,6 +54,8 @@ Postgres available at ```localhost:5432```
 
 RabbitMQ managment available at ```localhost:15672```
 
+Backend and frontend launched in hot realod mode, so all changes to codebase will be applied shortly after saving
+
 ### Without docker compose
 
 I haven't done that but you could try running several ```npm run start*:dev``` for each service. Dont forget to start rabbitmq and postgres and pass proper settings.
@@ -58,3 +63,32 @@ I haven't done that but you could try running several ```npm run start*:dev``` f
 ## For prod
 
 Not yet
+
+# Ui screenshots
+
+### Editor - starting page
+
+![Alt text](screenshots/editor_starting_screen.jpg?raw=true "Editor - starting page")
+
+### Editor - form preview
+
+![Alt text](screenshots/editor_form_preview.jpg?raw=true "Editor - form preview")
+
+### Editor - form creation
+
+![Alt text](screenshots/editor_form_creation.jpg?raw=true "Editor - form creation")
+
+### Editor - response viewer
+
+![Alt text](screenshots/editor_response_view.jpg?raw=true "Editor - response viewer")
+
+### Seperate page for filling forms
+
+![Alt text](screenshots/fill_form_page.jpg?raw=true "Seperate page for filling forms")
+
+# Ways to improve
+
+- Deleting forms
+- Updating forms (questinable). What to do with responses then? Delete? 
+- Since forms rarely changed, caching can be added, reduscing number of requests to db service
+- Authentication service

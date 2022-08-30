@@ -4,16 +4,11 @@ services:
         image: node:16
         container_name: nest-npm-i
         restart: "no"
-        depends_on:
-            postgres:
-                condition: service_started
         volumes:
             - ./forms-gen-nest:/app
         logging:
             options:
                 max-size: "50m"
-        environment:
-            - DATABASE_URL=postgres://root:root@postgres:5432/test # for prisma. It's probably not needed but just to be safe
         command: bash -c "echo installing packages && npm install --prefix=/app && echo generating prisma && npm run prisma:forms-db:generate --prefix=/app"
 
 
