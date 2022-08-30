@@ -71,7 +71,10 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.created',
         exchange: EXCHANGES.SHARED_FORMS,
-        queue: 'forms-rest:form.created',
+        queueOptions: {
+            durable: false,
+            exclusive: true
+        }
     } )
     async form_created ( @RabbitPayload() data: CompleteForm ) {
         this.event_emitter.emit( 'sse.forward', {
