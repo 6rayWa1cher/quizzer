@@ -17,6 +17,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     "paths": {
       "rmq/rmq": [
         "libs/rmq/src"
@@ -29,6 +30,12 @@
       ],
       "prisma-forms/prisma-forms/*": [
         "libs/prisma-forms/src/*"
+      ],
+      "discord/discord": [
+        "libs/discord/src"
+      ],
+      "discord/discord/*": [
+        "libs/discord/src/*"
       ]
     }
   }

@@ -91,7 +91,8 @@
     ],
     "moduleNameMapper": {
       "^rmq/rmq(|/.*)$": "<rootDir>/libs/rmq/src/$1",
-      "^prisma-forms/prisma-forms(|/.*)$": "<rootDir>/libs/prisma-forms/src/$1"
+      "^prisma-forms/prisma-forms(|/.*)$": "<rootDir>/libs/prisma-forms/src/$1",
+      "^discord/discord(|/.*)$": "<rootDir>/libs/discord/src/$1"
     }
   }
 }

@@ -53,6 +53,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/prisma-forms/tsconfig.lib.json"
       }
+    },
+    "discord": {
+      "type": "library",
+      "root": "libs/discord",
+      "entryFile": "index",
+      "sourceRoot": "libs/discord/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/discord/tsconfig.lib.json"
+      }
     }
   }
 }
