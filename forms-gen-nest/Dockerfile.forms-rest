@@ -1,0 +1,22 @@
+FROM node:16
+RUN mkdir -p /app
+WORKDIR /app
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm ci
+COPY . /app
+RUN npm run prisma:generate
+RUN npm run build:forms-rest
+
+ARG AMQP_URL=amqp://localhost:5672
+ENV AMQP_URL=${AMQP_URL}
+
+ARG PORT=3000
+ENV PORT=${PORT}
+
+ARG HOST=0.0.0.0
+ENV HOST=${HOST}
+
+EXPOSE ${PORT}
+
+CMD [ "npm", "run", "start:forms-rest:prod" ]

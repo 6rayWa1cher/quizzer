@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { FormsDiscordController } from './forms-discord.controller';
-import { FormsDiscordService } from './forms-discord.service';
 import { ConfigModule } from '@nestjs/config';
 import { FormsModule } from './forms/forms.module';
 import configuration from '../config/configuration';
@@ -17,8 +15,6 @@ import { RmqModule } from 'rmq/rmq';
         FormsModule,
         RmqModule,
     ],
-    controllers: [FormsDiscordController],
-    providers: [FormsDiscordService],
 } )
 export class FormsDiscordModule {
     constructor () { }

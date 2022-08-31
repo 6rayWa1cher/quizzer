@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import { lastValueFrom } from 'rxjs';
@@ -14,6 +14,8 @@ import { FormsSceneService } from '../forms-scene.service';
 export class WindowComponent implements OnInit {
     forms_list_short: Array<FormDescriptionShort> = [];
     loading: boolean = true;
+    test: boolean = false;
+    @ViewChild( 'button_create' ) button_create!: any;
 
     selected_id: number | undefined = 0;
 
@@ -31,14 +33,17 @@ export class WindowComponent implements OnInit {
                 this.forms_scene_service.update_todo_value_subject.subscribe( {
                     next: ( val ) => {
                         console.log( 'Form added', val );
-                        this.forms_list_short.push( val );
-                        console.log( this.forms_list_short );
+                        this.push_form( val );
                     },
                 } );
             } )
             .finally( () => {
                 this.loading = false;
             } );
+    }
+
+    push_form ( form: FormDescriptionShort ) {
+        this.forms_list_short.push( form );
     }
 
     create_new_form () {

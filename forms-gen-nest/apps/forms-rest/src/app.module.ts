@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import shared_configuration from 'apps/shared_configuration';
 import configuration from '../config/configuration';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { FormsModule } from './forms/forms.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -22,7 +21,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         } ),
     ],
     controllers: [AppController],
-    providers: [AppService],
 } )
 export class AppModule implements NestModule {
     configure ( consumer: MiddlewareConsumer ) {

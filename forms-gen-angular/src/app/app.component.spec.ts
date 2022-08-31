@@ -20,16 +20,16 @@ describe( 'AppComponent', () => {
         expect( app ).toBeTruthy();
     } );
 
-    it( `should have as title 'forms-editor-angular'`, () => {
+    it( `should have as title 'forms-gen-angular'`, () => {
         const fixture = TestBed.createComponent( AppComponent );
         const app = fixture.componentInstance;
-        expect( app.title ).toEqual( 'forms-editor-angular' );
+        expect( app.title ).toEqual( 'forms-gen-angular' );
     } );
 
     it( 'should render title', () => {
         const fixture = TestBed.createComponent( AppComponent );
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
-        expect( compiled.querySelector( '.content span' )?.textContent ).toContain( 'forms-editor-angular app is running!' );
+        expect( compiled.querySelector( '.content span' )?.textContent ).toContain( 'forms-gen-angular app is running!' );
     } );
 } );

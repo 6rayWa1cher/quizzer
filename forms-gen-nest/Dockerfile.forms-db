@@ -1,0 +1,17 @@
+FROM node:16
+RUN mkdir -p /app
+WORKDIR /app
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm ci
+COPY . /app
+RUN npm run prisma:generate
+RUN npm run build:forms-db
+
+ARG AMQP_URL=amqp://localhost:5672
+ENV AMQP_URL=${AMQP_URL}
+
+ARG DATABASE_URL=postgres://root:root@localhost:5432/test
+ENV DATABASE_URL=${DATABASE_URL}
+
+CMD [ "npm", "run", "start:forms-db:prod" ]

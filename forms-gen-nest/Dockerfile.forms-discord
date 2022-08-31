@@ -1,0 +1,17 @@
+FROM node:16
+RUN mkdir -p /app
+WORKDIR /app
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm ci
+COPY . /app
+RUN npm run prisma:generate
+RUN npm run build:forms-discord
+
+ARG AMQP_URL=amqp://localhost:5672
+ENV AMQP_URL=${AMQP_URL}
+
+ARG DISCORD_BOT_TOKEN='ABC'
+ENV DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+
+CMD [ "npm", "run", "start:forms-discord:prod" ]

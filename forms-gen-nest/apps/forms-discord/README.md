@@ -8,7 +8,7 @@ Sends message to corresponding channel for each forms' response
 
 AMQP_URL should be passed as env variable
 
-Discord api token should be passed as discord_bot.ts file in ./config
+Discord api token should be passed as DISCORD_BOT_TOKEN env var
 
 
 # Used technologies

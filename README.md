@@ -1,4 +1,5 @@
-# Description
+#  forms-gen-microservices
+## About
 
 Learning project for getting familiar with microservices.
 
@@ -13,10 +14,11 @@ Workflow:
 - User can look at submitted responses on the editor page
 
 Project broken into several pieces:
-- ```forms-gen-nest/apps/forms-rest``` - service for communicating with clients via rest api. Forwards calls to other services via rabbitmq
-- ```forms-gen-nest/apps/forms-db``` - service responsible for communication with db and creation of forms and responses
-- ```forms-gen-nest/apps/forms-discord``` - service responsible for managing discord guild
-- ```forms-gen-angular``` - frontend. Pretty strait forward
+- [forms-gen-nest](./forms-gen-nest/README.md) - backend. It is broken into multiple microservices communicating via rabbitmq
+    - [forms-gen-nest/apps/forms-rest](./forms-gen-nest/apps/forms-rest/README.md) - service for communicating with clients via rest api. Forwards calls to other services via rabbitmq
+    - [forms-gen-nest/apps/forms-db](./forms-gen-nest/apps/forms-db/README.md) - service responsible for communication with db and creation of forms and responses
+    - [forms-gen-nest/apps/forms-discord](./forms-gen-nest/apps/forms-discord/README.md) - service responsible for managing discord guild
+- [forms-gen-angular](./forms-gen-angular/README.md) - frontend. Pretty strait forward
 
 Each service has it's own README with a bit more info
 
@@ -62,7 +64,9 @@ I haven't done that but you could try running several ```npm run start*:dev``` f
 
 ## For prod
 
-Not yet
+- ```sudo docker-compose -f ./docker-compose.prod.yml up```
+
+You can consider adjusting some env variables to suit your needs
 
 # Ui screenshots
 
@@ -90,5 +94,5 @@ Not yet
 
 - Deleting forms
 - Updating forms (questinable). What to do with responses then? Delete? 
-- Since forms rarely changed, caching can be added, reduscing number of requests to db service
+- Since forms rarely changed, caching can be added, reducing number of requests to db service
 - Authentication service

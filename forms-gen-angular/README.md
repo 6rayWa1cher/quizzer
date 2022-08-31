@@ -30,6 +30,10 @@ From root
 - ```npm i```
 - ```npm run start:dev```
 
+## Dockerfile
+
+Dont forget to update ./src/environments/environment.prod.ts with proper urls for prod
+
 # How to work with it
 
 There are to distinct pages. 

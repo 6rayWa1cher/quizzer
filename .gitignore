@@ -1,2 +1,5 @@
 db-data
 rabbitmq-data/mnesia
+
+db-data-prod
+rabbitmq-data/mnesia-prod

@@ -1,6 +1,6 @@
 {
-  "name": "forms-editor-angular",
-  "version": "0.0.0",
+  "name": "forms-gen-angular",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "node server.js",

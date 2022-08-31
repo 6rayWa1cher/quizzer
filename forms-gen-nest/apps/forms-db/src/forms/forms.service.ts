@@ -136,7 +136,7 @@ export class FormsService {
     async get_all_forms (): Promise<Array<ShortForm>> {
         return this.prisma.form.findMany( {
             orderBy: {
-                name: 'asc',
+                id: 'asc',
             },
         } );
     }

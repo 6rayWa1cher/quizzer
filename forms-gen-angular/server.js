@@ -10,9 +10,9 @@ function requireHTTPS ( req, res, next ) {
 const express = require( 'express' );
 const app = express();
 // app.use( requireHTTPS );
-app.use( express.static( './dist/forms-editor-angular' ) );
+app.use( express.static( './dist/forms-gen-angular' ) );
 app.get( '/*', function ( req, res ) {
-    res.sendFile( 'index.html', { root: 'dist/forms-editor-angular/' },
+    res.sendFile( 'index.html', { root: 'dist/forms-gen-angular/' },
     );
 } );
 const port = process.env.PORT || 8080;

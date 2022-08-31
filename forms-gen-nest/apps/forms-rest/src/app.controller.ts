@@ -1,6 +1,5 @@
 import { Controller, Get, Sse, MessageEvent } from '@nestjs/common';
 import { interval, map, Observable, finalize, Subscriber } from 'rxjs';
-import { AppService } from './app.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SseForwardEvent } from './types/sse_forward_event';
 import { Listener } from 'eventemitter2';
@@ -8,14 +7,8 @@ import { Listener } from 'eventemitter2';
 @Controller()
 export class AppController {
     constructor (
-        private readonly appService: AppService,
         private event_emitter: EventEmitter2,
     ) { }
-
-    @Get()
-    getHello (): string {
-        return this.appService.getHello();
-    }
 
     @Sse( 'sse' )
     sse (): Observable<MessageEvent> {
