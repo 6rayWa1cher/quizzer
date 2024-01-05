@@ -11,9 +11,8 @@ services:
                 max-size: "50m"
         command: bash -c "echo installing packages && npm install --prefix=/app && echo generating prisma && npm run prisma:forms-db:generate --prefix=/app"
 
-
     postgres:
-        image: 'postgres:14.4'
+        image: "postgres:14.4"
         container_name: forms-gen-db-postgres
         restart: "no"
         logging:
@@ -27,10 +26,9 @@ services:
             - POSTGRES_DB=test
         volumes:
             - ./db-data/:/var/lib/postgresql/data/
-    
 
     rabbitmq:
-        image: 'rabbitmq:3.10.7-management'
+        image: "rabbitmq:3.10.7-management"
         container_name: forms-gen-rabbitmq
         restart: "no"
         logging:
@@ -42,7 +40,6 @@ services:
         volumes:
             - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - ./rabbitmq-data/mnesia/:/var/lib/rabbitmq/mnesia/
-
 
     forms-rest:
         image: node:16
@@ -66,7 +63,6 @@ services:
             - ./forms-gen-nest:/app
         command: bash -c "echo launching && npm run start:forms-rest:dev --prefix=/app"
 
-
     forms-db:
         image: node:16
         container_name: forms-gen-db
@@ -87,26 +83,6 @@ services:
         volumes:
             - ./forms-gen-nest:/app
         command: bash -c "echo migrating && npm run prisma:forms-db:migrate --prefix=/app && echo launching && npm run start:forms-db:dev --prefix=/app"
-
-
-    forms-discord:
-        image: node:16
-        container_name: forms-gen-discord
-        depends_on:
-            nest-npm-i:
-                condition: service_completed_successfully
-            rabbitmq:
-                condition: service_started
-        restart: "no"
-        logging:
-            options:
-                max-size: "50m"
-        environment:
-            - AMQP_URL=amqp://rabbitmq:5672
-        volumes:
-            - ./forms-gen-nest:/app
-        command: bash -c "echo launching && npm run start:forms-discord:dev --prefix=/app"        
-
 
     angular:
         image: node:16

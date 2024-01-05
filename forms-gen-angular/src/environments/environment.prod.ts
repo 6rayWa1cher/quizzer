@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    api_url: 'http://localhost:3000',
-    share_base_url: 'http://localhost:4200',
+    api_url: 'http://localhost/api',
+    share_base_url: 'http://localhost',
 };

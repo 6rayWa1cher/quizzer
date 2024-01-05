@@ -1,24 +1,39 @@
 version: "3.8"
 services:
+    traefik:
+        image: traefik
+        command:
+            - "--accesslog"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+            - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
     postgres:
-        image: 'postgres:14.4'
+        image: "postgres:14.4"
         container_name: forms-gen-db-postgres
         restart: "on-failure"
         logging:
             options:
                 max-size: "50m"
-        ports:
-            - 5432:5432
         environment:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=test
         volumes:
-            - ./db-data-prod/:/var/lib/postgresql/data/ # probably should be changed or removed
-    
+            - pg-data:/var/lib/postgresql/data/
 
     rabbitmq:
-        image: 'rabbitmq:3.10.7-management'
+        image: "rabbitmq:3.10.7-management"
         container_name: forms-gen-rabbitmq
         restart: "on-failure"
         logging:
@@ -31,9 +46,8 @@ services:
             - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - ./rabbitmq-data/mnesia-prod/:/var/lib/rabbitmq/mnesia/ # probably should be changed or removed
 
-
     forms-rest:
-        build: 
+        build:
             context: ./forms-gen-nest
             dockerfile: Dockerfile.forms-rest
         container_name: forms-gen-rest
@@ -48,12 +62,16 @@ services:
             - PORT=8080
             - HOST=0.0.0.0
             - AMQP_URL=amqp://guest:guest@rabbitmq:5672
-        ports:
-            - 3000:8080
-
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.backend.rule=(Host(`localhost`) && PathPrefix(`/api`))"
+            - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
+            - "traefik.http.routers.backend.middlewares=backend-stripprefix@docker"
+            - "traefik.http.routers.backend.entrypoints=web"
+            - "traefik.http.services.backend.loadbalancer.server.port=8080"
 
     forms-db:
-        build: 
+        build:
             context: ./forms-gen-nest
             dockerfile: Dockerfile.forms-db
         container_name: forms-gen-db
@@ -71,26 +89,8 @@ services:
             - AMQP_URL=amqp://rabbitmq:5672
         command: bash -c "echo migrating && npm run prisma:forms-db:migrate --prefix=/app && echo launching && npm run start:forms-db:prod --prefix=/app" # should be removed if migration is not needed
 
-
-    forms-discord:
-        build: 
-            context: ./forms-gen-nest
-            dockerfile: Dockerfile.forms-discord
-        container_name: forms-gen-discord
-        depends_on:
-            rabbitmq:
-                condition: service_started
-        restart: "on-failure"
-        logging:
-            options:
-                max-size: "50m"
-        environment:
-            - AMQP_URL=amqp://rabbitmq:5672
-            - DISCORD_BOT_TOKEN=ABC
-
-
     angular:
-        build: 
+        build:
             context: ./forms-gen-angular
             dockerfile: Dockerfile
         container_name: forms-gen-angular
@@ -98,5 +98,11 @@ services:
         logging:
             options:
                 max-size: "50m"
-        ports:
-            - 4200:80
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.kratos-selfservice-ui-node.rule=(Host(`localhost`))"
+            - "traefik.http.routers.kratos-selfservice-ui-node.entrypoints=web"
+            - "traefik.http.services.kratos-selfservice-ui-node.loadbalancer.server.port=80"
+
+volumes:
+    pg-data:
