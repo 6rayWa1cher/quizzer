@@ -56,6 +56,12 @@
             state: latest
             update_cache: true
 
+      - name: Update & upgrade all packages
+        apt:
+            name: "*"
+            state: latest
+            update_cache: true
+
       - name: Install required system packages
         apt:
             pkg:
