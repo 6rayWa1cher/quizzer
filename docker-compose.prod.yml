@@ -22,6 +22,8 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+            - "traefik.http.middlewares.redirectschememw.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.redirectschememw.redirectscheme.permanent=true"
 
     postgres:
         image: "postgres:14.4"
