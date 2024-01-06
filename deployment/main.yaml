@@ -50,17 +50,16 @@
         assert:
             that: "'{{ swap_file_path }} in swapon_check.stdout'"
 
-      - name: Install aptitude
-        apt:
-            name: aptitude
-            state: latest
-            update_cache: true
-
       - name: Update & upgrade all packages
         apt:
             name: "*"
             state: latest
             update_cache: true
+
+      - name: Install aptitude
+        apt:
+            name: aptitude
+            state: latest
 
       - name: Install required system packages
         apt:
@@ -73,7 +72,6 @@
                 - virtualenv
                 - python3-setuptools
             state: latest
-            update_cache: true
 
       - name: Add Docker GPG apt Key
         apt_key:
