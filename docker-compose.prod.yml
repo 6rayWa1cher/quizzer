@@ -15,7 +15,6 @@ services:
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
             - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
     postgres:
@@ -64,11 +63,11 @@ services:
             - AMQP_URL=amqp://guest:guest@rabbitmq:5672
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.backend.rule=(Host(`localhost`) && PathPrefix(`/api`))"
-            - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
-            - "traefik.http.routers.backend.middlewares=backend-stripprefix@docker"
-            - "traefik.http.routers.backend.entrypoints=web"
-            - "traefik.http.services.backend.loadbalancer.server.port=8080"
+            - "traefik.http.routers.forms-rest.rule=(Host(`${BASE_HOST}`) && PathPrefix(`/api`))"
+            - "traefik.http.middlewares.forms-rest-stripprefix.stripprefix.prefixes=/api"
+            - "traefik.http.routers.forms-rest.middlewares=forms-rest-stripprefix@docker"
+            - "traefik.http.routers.forms-rest.entrypoints=web"
+            - "traefik.http.services.forms-rest.loadbalancer.server.port=8080"
 
     forms-db:
         build:
@@ -100,9 +99,9 @@ services:
                 max-size: "50m"
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.kratos-selfservice-ui-node.rule=(Host(`localhost`))"
-            - "traefik.http.routers.kratos-selfservice-ui-node.entrypoints=web"
-            - "traefik.http.services.kratos-selfservice-ui-node.loadbalancer.server.port=80"
+            - "traefik.http.routers.angular.entrypoints=web"
+            - "traefik.http.routers.angular.rule=(Host(`${BASE_HOST}`))"
+            - "traefik.http.services.angular.loadbalancer.server.port=80"
 
 volumes:
     pg-data:

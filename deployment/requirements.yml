@@ -1,0 +1,9 @@
+---
+roles:
+    - src: https://github.com/geerlingguy/ansible-role-swap.git
+      scm: git
+      version: master
+      name: geerlingguy.swap
+
+collections:
+    - name: community.general

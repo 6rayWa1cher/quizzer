@@ -3,3 +3,5 @@ rabbitmq-data/mnesia
 
 db-data-prod
 rabbitmq-data/mnesia-prod
+
+.env
