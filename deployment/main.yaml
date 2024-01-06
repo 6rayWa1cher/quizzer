@@ -3,22 +3,52 @@
   hosts: all
   become: true
 
+  vars:
+      swap_file_path: /swapfile
+      swap_file_size: 16G
+      project_path: /home/{{ user_name }}/quizzer
+
   tasks:
       - name: Fail if "user_name" is undefined
-        ansible.builtin.fail: msg="Bailing out. This play requires 'user_name'"
+        fail: msg="Bailing out. This play requires 'user_name'"
         when: user_name is undefined
 
       - name: Fail if "host_base" is undefined
-        ansible.builtin.fail: msg="Bailing out. This play requires 'host_base'"
+        fail: msg="Bailing out. This play requires 'host_base'"
         when: host_base is undefined
 
+      - name: Check if swap exists
+        stat:
+            path: "{{ swap_file_path }}"
+            get_checksum: false
+        register: swap_file_check
+        changed_when: false
+
       - name: Create swap
-        ansible.builtin.include_role:
-            name: geerlingguy.swap
-        vars:
-            swap_file_size_mb: "16384"
-            swap_file_existing_size_mb: "16384"
-            swap_file_state: present
+        shell: fallocate -l {{ swap_file_size }} {{ swap_file_path }}
+        when: "not swap_file_check.stat.exists"
+
+      - name: Fix permissions for swap
+        file:
+            path: "{{ swap_file_path }}"
+            mode: 700
+        when: "not swap_file_check.stat.exists"
+
+      - name: Mark swap file
+        shell: mkswap {{ swap_file_path }}
+        when: "not swap_file_check.stat.exists"
+
+      - name: Enable swap
+        shell: swapon {{ swap_file_path }}
+        when: "not swap_file_check.stat.exists"
+
+      - name: Check swap
+        shell: swapon --show
+        register: swapon_check
+
+      - name: Assert swap is connected
+        assert:
+            that: "'{{ swap_file_path }} in swapon_check.stdout'"
 
       - name: Install aptitude
         apt:
@@ -67,18 +97,18 @@
       - name: Download project from Git
         git:
             repo: https://github.com/6rayWa1cher/quizzer
-            dest: /home/{{ user_name }}/quizzer/
+            dest: "{{ project_path }}"
             force: true
 
       - name: Configure forms-gen-angular/environment.prod.ts
-        ansible.builtin.template:
+        template:
             src: templates/environment.prod.ts.j2
-            dest: /home/{{ user_name }}/quizzer/forms-gen-angular/src/environments/environment.prod.ts
+            dest: "{{ project_path }}/forms-gen-angular/src/environments/environment.prod.ts"
 
       - name: Configure .env
-        ansible.builtin.template:
+        template:
             src: templates/.env.j2
-            dest: /home/{{ user_name }}/quizzer/.env
+            dest: "{{ project_path }}/.env"
 
       - name: Install UFW
         apt:
@@ -100,10 +130,46 @@
             rule: limit
             name: OpenSSH
 
-      - name: Enable UFW
-        community.general.ufw:
-            state: enabled
-
-      - name: Deny everything
+      - name: Enable UFW and deny everything
         community.general.ufw:
             policy: deny
+            state: enabled
+
+      - name: Tear down existing services
+        shell: docker compose -f docker-compose.prod.yml down --remove-orphans
+        args:
+            chdir: "{{ project_path }}"
+
+      - name: Deploy services
+        shell: docker compose -f docker-compose.prod.yml up --build -d
+        args:
+            chdir: "{{ project_path }}"
+        register: output
+
+      - name: Show deploy results
+        debug:
+            var: output
+
+      - name: Wait for service init
+        pause:
+            seconds: 45
+
+      - name: Check running services
+        shell: docker compose ps --services --status=running
+        args:
+            chdir: "{{ project_path }}"
+        register: output
+
+      - name: Show running services check results
+        debug:
+            var: output
+
+      - name: Assert all necessary services are running
+        assert:
+            that:
+                - "'traefik' in output.stdout"
+                - "'postgres' in output.stdout"
+                - "'rabbitmq' in output.stdout"
+                - "'forms-rest' in output.stdout"
+                - "'forms-db' in output.stdout"
+                - "'angular' in output.stdout"

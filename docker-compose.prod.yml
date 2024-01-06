@@ -2,6 +2,7 @@ version: "3.8"
 services:
     traefik:
         image: traefik
+        container_name: traefik-service
         command:
             - "--accesslog"
             - "--api.insecure=true"
