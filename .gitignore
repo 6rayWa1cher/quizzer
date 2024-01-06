@@ -5,3 +5,4 @@ db-data-prod
 rabbitmq-data/mnesia-prod
 
 .env
+letsencrypt

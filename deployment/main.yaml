@@ -17,6 +17,10 @@
         fail: msg="Bailing out. This play requires 'host_base'"
         when: host_base is undefined
 
+      - name: Fail if "acme_email" is undefined
+        fail: msg="Bailing out. This play requires 'acme_email'"
+        when: acme_email is undefined
+
       - name: Check if swap exists
         stat:
             path: "{{ swap_file_path }}"
