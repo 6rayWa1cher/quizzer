@@ -11,11 +11,7 @@ export class RestService {
     private pending_sse_listeners: Array<{ type: string, listener: ( this: EventSource, event: MessageEvent<any> ) => any }> = [];
     private sse_called: boolean = false;
 
-    constructor ( private snack_bar: MatSnackBar ) {
-        // this.add_sse_listener( 'count', ( data ) => {
-        //     console.log( 'New message', data );
-        // } );
-    }
+    constructor ( private snack_bar: MatSnackBar ) { }
 
     send_request ( data: any, method: 'GET' | 'POST' | 'PUT' | 'DELETE', path: string ) {
         return axios( {
@@ -28,7 +24,7 @@ export class RestService {
                 return res.data;
             } )
             .catch( ( err ) => {
-                this.snack_bar.open( `Error occured while sending request ${err?.response?.status || ''}`, 'close', {
+                this.snack_bar.open( `Error occurred while sending request ${err?.response?.status || ''}`, 'close', {
                     duration: 5000,
                 } );
                 console.log( err );
@@ -55,7 +51,7 @@ export class RestService {
     }
 
     /**
-     * Recommended to use only in singletons since i didint bother to make function for removing listeners
+     * Recommended to use only in singletons since i didn't bother to make function for removing listeners
      * Sse listening starts after this function called at least once
      *
      * @param {string} type
@@ -63,7 +59,7 @@ export class RestService {
      * @memberof RestService
      */
     add_sse_listener ( type: string, listener: ( this: EventSource, event: MessageEvent<any> ) => any ) {
-        if ( !this.sse_called ) { // to make sure sse used only if there are listneres since number of open requests is limited
+        if ( !this.sse_called ) { // to make sure sse used only if there are listeners since number of open requests is limited
             this.sse_called = true;
             this.connect_sse();
         }
