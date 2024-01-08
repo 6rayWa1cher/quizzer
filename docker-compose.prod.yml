@@ -23,6 +23,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+            - "traefik.http.routers.http-catchall.rule=(HostRegexp(`{host:.+}`))"
             - "traefik.http.routers.http-catchall.entrypoints=web"
             - "traefik.http.routers.http-catchall.middlewares=redirectschememw"
             - "traefik.http.middlewares.redirectschememw.redirectscheme.scheme=https"
