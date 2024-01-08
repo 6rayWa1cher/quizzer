@@ -102,6 +102,12 @@
         pip:
             name: docker
 
+      - name: Enable docker service
+        systemd_service:
+            name: docker
+            enabled: true
+            state: started
+
       - name: Download project from Git
         git:
             repo: https://github.com/6rayWa1cher/quizzer
