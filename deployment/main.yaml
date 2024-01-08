@@ -7,19 +7,19 @@
       swap_file_path: /swapfile
       swap_file_size: 16G
       project_path: /home/{{ user_name }}/quizzer
+      cloudflare_ddns_path: /home/{{ user_name }}/cloudflare-ddns
 
   tasks:
-      - name: Fail if "user_name" is undefined
-        fail: msg="Bailing out. This play requires 'user_name'"
-        when: user_name is undefined
-
-      - name: Fail if "host_base" is undefined
-        fail: msg="Bailing out. This play requires 'host_base'"
-        when: host_base is undefined
-
-      - name: Fail if "acme_email" is undefined
-        fail: msg="Bailing out. This play requires 'acme_email'"
-        when: acme_email is undefined
+      - name: Assert all necessary items are available
+        fail: msg="Bailing out. This play requires '{{ item }}'"
+        when: "{{ item }} is undefined"
+        loop:
+            - user_name
+            - host_base
+            - acme_email
+            - cloudflare_ddns_token
+            - cloudflare_ddns_zone_id
+            - cloudflare_ddns_subdomain
 
       - name: Check if swap exists
         stat:
@@ -108,15 +108,30 @@
             dest: "{{ project_path }}"
             force: true
 
+      - name: Ensure cloudflare-ddns path is available
+        file:
+            path: "{{ cloudflare_ddns_path }}"
+            state: directory
+
       - name: Configure forms-gen-angular/environment.prod.ts
         template:
-            src: templates/environment.prod.ts.j2
+            src: templates/angular/environment.prod.ts.j2
             dest: "{{ project_path }}/forms-gen-angular/src/environments/environment.prod.ts"
 
       - name: Configure .env
         template:
-            src: templates/.env.j2
+            src: templates/docker/.env.j2
             dest: "{{ project_path }}/.env"
+
+      - name: Configure cloudflare-ddns/docker-compose.yml
+        template:
+            src: templates/cloudflare-ddns/docker-compose.yml.j2
+            dest: "{{ cloudflare_ddns_path }}/docker-compose.yml"
+
+      - name: Configure cloudflare-ddns/config.json
+        template:
+            src: templates/cloudflare-ddns/config.json.j2
+            dest: "{{ cloudflare_ddns_path }}/config.json"
 
       - name: Install UFW
         apt:
@@ -138,41 +153,27 @@
             policy: deny
             state: enabled
 
-      - name: Tear down existing services
-        shell: docker compose -f docker-compose.prod.yml down --remove-orphans
-        args:
-            chdir: "{{ project_path }}"
+      - name: Deploy cloudflare agent
+        include_role:
+            name: my-docker
+        vars:
+            docker_compose_file: docker-compose.yml
+            docker_compose_path: "{{ cloudflare_ddns_path }}"
+            docker_compose_wait_seconds: 5
+            docker_compose_list_of_services:
+                - cloudflare-ddns
 
-      - name: Deploy services
-        shell: docker compose -f docker-compose.prod.yml up --build -d
-        args:
-            chdir: "{{ project_path }}"
-        register: output
-
-      - name: Show deploy results
-        debug:
-            var: output
-
-      - name: Wait for service init
-        pause:
-            seconds: 45
-
-      - name: Check running services
-        shell: docker compose ps --services --status=running
-        args:
-            chdir: "{{ project_path }}"
-        register: output
-
-      - name: Show running services check results
-        debug:
-            var: output
-
-      - name: Assert all necessary services are running
-        assert:
-            that:
-                - "'traefik' in output.stdout"
-                - "'postgres' in output.stdout"
-                - "'rabbitmq' in output.stdout"
-                - "'forms-rest' in output.stdout"
-                - "'forms-db' in output.stdout"
-                - "'angular' in output.stdout"
+      - name: Deploy application
+        include_role:
+            name: my-docker
+        vars:
+            docker_compose_file: docker-compose.prod.yml
+            docker_compose_path: "{{ project_path }}"
+            docker_compose_wait_seconds: 45
+            docker_compose_list_of_services:
+                - traefik
+                - postgres
+                - rabbitmq
+                - forms-rest
+                - forms-db
+                - angular

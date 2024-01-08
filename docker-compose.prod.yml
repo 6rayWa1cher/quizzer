@@ -8,6 +8,7 @@ services:
             - "--api.insecure=true"
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
             - "--entrypoints.websecure.address=:443"
             - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
             - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
@@ -22,13 +23,14 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+            - "traefik.http.routers.http-catchall.entrypoints=web"
+            - "traefik.http.routers.http-catchall.middlewares=redirectschememw"
             - "traefik.http.middlewares.redirectschememw.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.redirectschememw.redirectscheme.permanent=true"
 
     postgres:
         image: "postgres:14.4"
         container_name: forms-gen-db-postgres
-        restart: "on-failure"
+        restart: "unless-stopped"
         logging:
             options:
                 max-size: "50m"
@@ -42,7 +44,7 @@ services:
     rabbitmq:
         image: "rabbitmq:3.10.7-management"
         container_name: forms-gen-rabbitmq
-        restart: "on-failure"
+        restart: "unless-stopped"
         logging:
             options:
                 max-size: "50m"
@@ -61,7 +63,7 @@ services:
         depends_on:
             rabbitmq:
                 condition: service_started
-        restart: "on-failure"
+        restart: "unless-stopped"
         logging:
             options:
                 max-size: "50m"
@@ -88,7 +90,7 @@ services:
                 condition: service_started
             rabbitmq:
                 condition: service_started
-        restart: "on-failure"
+        restart: "unless-stopped"
         logging:
             options:
                 max-size: "50m"
@@ -102,7 +104,7 @@ services:
             context: ./forms-gen-angular
             dockerfile: Dockerfile
         container_name: forms-gen-angular
-        restart: "on-failure"
+        restart: "unless-stopped"
         logging:
             options:
                 max-size: "50m"

@@ -1,0 +1,35 @@
+---
+- name: Tear down existing services for {{ docker_compose_path }}
+  shell: docker compose -f {{ docker_compose_file }} down --remove-orphans
+  args:
+      chdir: "{{ docker_compose_path }}"
+
+- name: Deploy services for {{ docker_compose_path }}
+  shell: docker compose -f {{ docker_compose_file }} up --build -d
+  args:
+      chdir: "{{ docker_compose_path }}"
+  register: output
+
+- name: Show deploy results for {{ docker_compose_path }}
+  debug:
+      var: output
+
+- name: Wait for service init for {{ docker_compose_path }}
+  pause:
+      seconds: "{{ docker_compose_wait_seconds }}"
+
+- name: Check running services for {{ docker_compose_path }}
+  shell: docker compose ps --services --status=running
+  args:
+      chdir: "{{ docker_compose_path }}"
+  register: output
+
+- name: Show running services check results for {{ docker_compose_path }}
+  debug:
+      var: output
+
+- name: Assert all necessary services are running for {{ docker_compose_path }}
+  assert:
+      that:
+          - "'{{ item }}' in output.stdout"
+  loop: "{{ docker_compose_list_of_services }}"
