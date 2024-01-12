@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import * as _ from 'lodash';
-import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm, PendingForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PrismaFormsService, PendingForm } from 'prisma-forms/prisma-forms';
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
 import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 import { AllFormsShortDto } from '../dto/all_forms_short.dto';
+import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
 
 @Injectable()
 export class FormsService {
@@ -59,16 +60,14 @@ export class FormsService {
                 return null;
             }
 
-            const intersection_fields = _.intersectionBy(
-                create_form_response_dto.fields,
+            const intersection_fields = _( create_form_response_dto.fields as any ).concat(
                 _.map( form.fields, ( val ) => {
                     return {
                         form_field_id: val.id,
-                        data: '',
+                        correct_answer: val.correct_answer,
                     };
                 } ),
-                'form_field_id',
-            );
+            ).groupBy( 'form_field_id' ).reject( { length: 1 } as any ).map( _.spread( _.merge ) ).value() as any;
 
             const fields_to_create = _.map( intersection_fields, ( val ) => {
                 return {
@@ -81,10 +80,11 @@ export class FormsService {
                         },
                     },
                     data: val.data,
+                    correct_answer: val.correct_answer,
                 };
             } );
 
-            return prisma.formResponse.create( {
+            const inserted_fields = await prisma.formResponse.create( {
                 data: {
                     form: {
                         connect: {
@@ -103,18 +103,24 @@ export class FormsService {
                             },
                         },
                         include: {
-                            form_field: true,
+                            form_field: {
+                                include: {
+                                    options: true,
+                                },
+                            },
                         },
                     },
                 },
             } );
+
+            return inserted_fields;
         } );
     }
 
-    async get_form_by_id ( form_id: number ): Promise<CompleteForm | null> {
-        return this.prisma.form.findUnique( {
+    async get_form_by_id ( get_form_by_id_dto: GetFormByIdDto ): Promise<CompleteForm | null> {
+        const form = await this.prisma.form.findUnique( {
             where: {
-                id: form_id,
+                id: get_form_by_id_dto.id,
             },
             include: {
                 fields: {
@@ -135,6 +141,15 @@ export class FormsService {
                 },
             },
         } );
+
+        if ( !get_form_by_id_dto.include_correct_answers ) {
+            form.fields = _.map( form.fields, ( field ) => {
+                field.correct_answer = undefined;
+                return field;
+            } );
+        }
+
+        return form;
     }
 
     async get_all_forms (): Promise<AllFormsShortDto> {
@@ -238,7 +253,7 @@ export class FormsService {
                                 name: question.question,
                                 description: '',
                                 type: 'select',
-                                correct_response: question.correct_answer,
+                                correct_answer: question.correct_answer,
 
                             };
                             ret.options = {

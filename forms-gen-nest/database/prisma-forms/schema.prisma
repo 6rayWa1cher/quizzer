@@ -31,7 +31,7 @@ model FormField {
   type             String              @db.VarChar(32)
   options          FormFieldOption[]
   responses        FormResponseField[]
-  correct_response String?             @db.Text()
+  correct_answer   String?             @db.Text()
 
   @@id([id, form_id])
 }
@@ -62,6 +62,7 @@ model FormResponseField {
   form_response    FormResponse @relation(fields: [form_response_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
   form_response_id Int
   data             String       @default("") @db.VarChar(256)
+  correct_answer   String?      @db.Text()
 
   @@id([id, form_field_id, form_response_id])
 }

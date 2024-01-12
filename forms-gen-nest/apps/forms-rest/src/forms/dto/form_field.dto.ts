@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsArray, IsIn, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 import * as _ from 'lodash';
 import { CompleteForm } from 'prisma-forms/prisma-forms';
 
@@ -21,6 +21,12 @@ export class FormFieldAnyDto {
     @IsString()
     @MaxLength( 256 )
     description: string;
+
+    @ApiProperty()
+    @Expose()
+    @IsString()
+    @IsOptional()
+    correct_answer?: string;
 
     @ApiProperty()
     @Expose()

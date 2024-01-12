@@ -10,6 +10,7 @@ import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto
 import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 import { AllFormsShortDto } from '../dto/all_forms_short.dto';
+import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
 
 
 @Controller( 'forms' )
@@ -47,19 +48,20 @@ export class FormsController {
         queue: 'forms-db:form.response.post',
     } )
     async create_response ( @RabbitPayload() data: { form_id: number, create_form_response_dto: CreateFormResponseDto } ) {
-        return this.default_rmq_handler(
-            this.forms_service.create_response( data.form_id, data.create_form_response_dto )
-                .then( ( val: CompleteFormResponse | null ) => {
-                    if ( val !== null ) {
-                        this.amqp_connection.publish(
-                            EXCHANGES.SHARED_FORMS,
-                            'form.response.created',
-                            val,
-                        );
-                    }
-                    return val;
-                } ),
-        );
+        return this.default_rmq_handler( this.forms_service.create_response( data.form_id, data.create_form_response_dto ) );
+        // return this.default_rmq_handler(
+        //     this.forms_service.create_response( data.form_id, data.create_form_response_dto )
+        //         .then( ( val: CompleteFormResponse | null ) => {
+        //             if ( val !== null ) {
+        //                 this.amqp_connection.publish(
+        //                     EXCHANGES.SHARED_FORMS,
+        //                     'form.response.created',
+        //                     val,
+        //                 );
+        //             }
+        //             return val;
+        //         } ),
+        // );
     }
 
     @RabbitRPC( {
@@ -70,8 +72,8 @@ export class FormsController {
             durable: false,
         }
     } )
-    async get_form_by_id ( @RabbitPayload() id: number ): Promise<RmqOk<CompleteForm | null>> {
-        return this.default_rmq_handler( this.forms_service.get_form_by_id( id ) );
+    async get_form_by_id ( @RabbitPayload() get_form_by_id_dto: GetFormByIdDto ): Promise<RmqOk<CompleteForm | null>> {
+        return this.default_rmq_handler( this.forms_service.get_form_by_id( get_form_by_id_dto ) );
     }
 
     @RabbitRPC( {
