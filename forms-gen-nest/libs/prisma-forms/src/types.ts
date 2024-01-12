@@ -29,3 +29,7 @@ const complete_from_response = Prisma.validator<Prisma.FormResponseArgs>()( {
 
 
 export type CompleteFormResponse = Prisma.FormResponseGetPayload<typeof complete_from_response>
+
+const pending_form = Prisma.validator<Prisma.PendingFormArgs>()( {} );
+
+export type PendingForm = Prisma.PendingFormGetPayload<typeof pending_form>

@@ -2,7 +2,7 @@ import { RabbitPayload, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Sse, MessageEvent } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as _ from 'lodash';
-import { CompleteForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, PendingForm } from 'prisma-forms/prisma-forms';
 import { EXCHANGES } from 'rmq/rmq';
 import { finalize, interval, map, Observable } from 'rxjs';
 import { CreateFormDto } from './dto/create_form.dto';
@@ -13,6 +13,8 @@ import { FormDescriptionShortDto } from './dto/forms_short_list_dto';
 import { FormResponseDto } from './dto/form_response.dto';
 import { FormsService } from './forms.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { GenerateFormDto } from './dto/generate_form.dto';
+import { PendingFormDto } from './dto/pending_form.dto';
 
 
 @ApiTags( 'Forms' )
@@ -71,15 +73,37 @@ export class FormsController {
     @RabbitRPC( {
         routingKey: 'form.created',
         exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-rest:form.created',
         queueOptions: {
             durable: false,
-            exclusive: true
         }
     } )
     async form_created ( @RabbitPayload() data: CompleteForm ) {
         this.event_emitter.emit( 'sse.forward', {
             type: 'form.created',
             data: new FormDescriptionShortDto( data ),
+        } );
+    }
+
+    @ApiOperation( { summary: 'Generate form using 🦄ai🦄' } )
+    @ApiCreatedResponse()
+    @Post( 'generate' )
+    async generate_form ( @Body() generate_form_dto: GenerateFormDto ): Promise<void> {
+        return this.forms_service.generate_form( generate_form_dto );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.pending.update',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-rest:form.pending.update',
+        queueOptions: {
+            durable: false,
+        }
+    } )
+    async form_pending_update ( @RabbitPayload() data: PendingForm ) {
+        this.event_emitter.emit( 'sse.forward', {
+            type: 'form.pending.update',
+            data: new PendingFormDto( data ),
         } );
     }
 }

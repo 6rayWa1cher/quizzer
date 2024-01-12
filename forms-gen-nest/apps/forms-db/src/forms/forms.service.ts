@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import * as _ from 'lodash';
-import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm, PendingForm } from 'prisma-forms/prisma-forms';
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
+import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
+import { GenerationCompleteDto, GenerationUpdateDto } from '../dto/generation_from_update.dto';
 
 @Injectable()
 export class FormsService {
@@ -185,6 +187,81 @@ export class FormsService {
                     },
                 },
             },
+        } );
+    }
+
+    async generate_form ( generate_form_dto: GenerateFormDto ): Promise<PendingForm> {
+        return this.prisma.pendingForm.create( {
+            data: {
+                name: generate_form_dto.name,
+                prompt: generate_form_dto.prompt,
+                questions_count: generate_form_dto.questions_count,
+            },
+        } );
+    }
+
+    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<PendingForm> {
+        return this.prisma.pendingForm.update( {
+            data: {
+                questions_count: generation_update_dto.questions_done,
+            },
+            where: {
+                id: generation_update_dto.id,
+            },
+        } );
+    }
+
+    async generation_complete ( generation_complete_dto: GenerationCompleteDto ): Promise<CompleteForm> {
+        return this.prisma.$transaction( async ( prisma ) => {
+            const pending_form = await prisma.pendingForm.delete( {
+                    where: {
+                        id: generation_complete_dto.id,
+                    },
+            } );
+
+            return prisma.form.create( {
+                data: {
+                    name: pending_form.name,
+                    description: pending_form.prompt,
+                    fields: {
+                        create: _.map( generation_complete_dto.questions, ( question ) => {
+                            const ret: Prisma.FormCreateArgs['data']['fields']['create'] = {
+                                name: question.question,
+                                description: '',
+                                type: 'select',
+                                correct_response: question.correct_answer,
+
+                            };
+                            ret.options = {
+                                create: _.map( question.answers, ( answer ) => {
+                                    return {
+                                        value: answer,
+                                    };
+                                } ),
+                            };
+                            return ret;
+                        } ),
+                    },
+                },
+                include: {
+                    fields: {
+                        orderBy: {
+                            // ordering by autoinrement field so fields in same order as they were inserted.
+                            // Later seperate sort_order field might be added
+                            id: 'asc',
+                        },
+                        include: {
+                            options: {
+                                orderBy: {
+                                    // ordering by autoinrement field so fields in same order as they were inserted.
+                                    // Later seperate sort_order field might be added
+                                    id: 'asc',
+                                },
+                            },
+                        },
+                    },
+                },
+            } );
         } );
     }
 }

@@ -5,6 +5,7 @@ import { RmqOk, RmqResponse, RMQ_CODES } from 'rmq/rmq/responses';
 import { CreateFormResponseDto } from './dto/create_form_response.dto';
 import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/prisma-forms';
 import { CreateFormDto } from './dto/create_form.dto';
+import { GenerateFormDto } from './dto/generate_form.dto';
 
 @Injectable()
 export class FormsService {
@@ -91,6 +92,20 @@ export class FormsService {
             EXCHANGES.SHARED_FORMS,
             'form.post',
             create_form_response_dto,
+        );
+    }
+
+    /**
+     * Warning: nonlocal function. Calls similar function from form-db service
+     *
+     * @param {GenerateFormDto} generate_form_dto
+     * @memberof FormsService
+     */
+    async generate_form ( generate_form_dto: GenerateFormDto ) {
+        this.amqp_connection.publish(
+            EXCHANGES.SHARED_FORMS,
+            'form.generate',
+            generate_form_dto,
         );
     }
 }

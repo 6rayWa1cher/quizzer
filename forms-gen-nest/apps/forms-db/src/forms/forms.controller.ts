@@ -6,6 +6,8 @@ import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/pris
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { RmqError, RmqOk, RmqResponse } from 'rmq/rmq/responses';
+import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
+import { GenerationCompleteDto, GenerationUpdateDto } from '../dto/generation_from_update.dto';
 
 
 @Controller( 'forms' )
@@ -90,6 +92,63 @@ export class FormsController {
     async create_form ( @RabbitPayload() data: CreateFormDto ) {
         return this.default_rmq_handler(
             this.forms_service.create_form( data )
+                .then( ( val ) => {
+                    this.amqp_connection.publish(
+                        EXCHANGES.SHARED_FORMS,
+                        'form.created',
+                        val,
+                    );
+                    return val;
+                } ),
+        );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generate',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generate',
+    } )
+    async generate_form ( @RabbitPayload() data: GenerateFormDto ) {
+        return this.forms_service.generate_form( data ).then( ( val ) => {
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'ai.generate',
+                val,
+            );
+
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'form.pending.update',
+                val,
+            );
+            return val;
+        } );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generation.update',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generation.update',
+    } )
+    async form_generation_update ( @RabbitPayload() data: GenerationUpdateDto ) {
+        return this.forms_service.generation_update( data ).then( ( val ) => {
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'form.pending.update',
+                val,
+            );
+            return val;
+        } );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generation.complete',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generation.complete',
+    } )
+    async form_generation_complete ( @RabbitPayload() data: GenerationCompleteDto ) {
+        return this.default_rmq_handler(
+            this.forms_service.generation_complete( data )
                 .then( ( val ) => {
                     this.amqp_connection.publish(
                         EXCHANGES.SHARED_FORMS,
