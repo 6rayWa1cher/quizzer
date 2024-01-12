@@ -5,7 +5,8 @@ import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm, Pend
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
-import { GenerationCompleteDto, GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 
 @Injectable()
 export class FormsService {
@@ -203,7 +204,7 @@ export class FormsService {
     async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<PendingForm> {
         return this.prisma.pendingForm.update( {
             data: {
-                questions_count: generation_update_dto.questions_done,
+                questions_done: generation_update_dto.questions_done,
             },
             where: {
                 id: generation_update_dto.id,

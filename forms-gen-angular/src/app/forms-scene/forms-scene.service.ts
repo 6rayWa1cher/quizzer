@@ -28,6 +28,9 @@ export class FormsSceneService {
             this.rest_service.add_sse_listener( 'form.created', ( { data } ) => {
                 this.update_todo_value_subject.next( JSON.parse( data ) );
             } );
+            this.rest_service.add_sse_listener( 'form.pending.update', ( { data } ) => {
+                console.log( 'PENDING UPDATE', data );
+            } );
         }
     }
 }

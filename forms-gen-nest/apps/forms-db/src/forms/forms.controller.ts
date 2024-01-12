@@ -7,7 +7,8 @@ import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { RmqError, RmqOk, RmqResponse } from 'rmq/rmq/responses';
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
-import { GenerationCompleteDto, GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 
 
 @Controller( 'forms' )
