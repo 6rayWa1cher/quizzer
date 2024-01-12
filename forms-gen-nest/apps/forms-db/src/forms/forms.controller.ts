@@ -6,6 +6,11 @@ import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/pris
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { RmqError, RmqOk, RmqResponse } from 'rmq/rmq/responses';
+import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
+import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
+import { AllFormsShortDto } from '../dto/all_forms_short.dto';
+import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
 
 
 @Controller( 'forms' )
@@ -43,19 +48,20 @@ export class FormsController {
         queue: 'forms-db:form.response.post',
     } )
     async create_response ( @RabbitPayload() data: { form_id: number, create_form_response_dto: CreateFormResponseDto } ) {
-        return this.default_rmq_handler(
-            this.forms_service.create_response( data.form_id, data.create_form_response_dto )
-                .then( ( val: CompleteFormResponse | null ) => {
-                    if ( val !== null ) {
-                        this.amqp_connection.publish(
-                            EXCHANGES.SHARED_FORMS,
-                            'form.response.created',
-                            val,
-                        );
-                    }
-                    return val;
-                } ),
-        );
+        return this.default_rmq_handler( this.forms_service.create_response( data.form_id, data.create_form_response_dto ) );
+        // return this.default_rmq_handler(
+        //     this.forms_service.create_response( data.form_id, data.create_form_response_dto )
+        //         .then( ( val: CompleteFormResponse | null ) => {
+        //             if ( val !== null ) {
+        //                 this.amqp_connection.publish(
+        //                     EXCHANGES.SHARED_FORMS,
+        //                     'form.response.created',
+        //                     val,
+        //                 );
+        //             }
+        //             return val;
+        //         } ),
+        // );
     }
 
     @RabbitRPC( {
@@ -66,8 +72,8 @@ export class FormsController {
             durable: false,
         }
     } )
-    async get_form_by_id ( @RabbitPayload() id: number ): Promise<RmqOk<CompleteForm | null>> {
-        return this.default_rmq_handler( this.forms_service.get_form_by_id( id ) );
+    async get_form_by_id ( @RabbitPayload() get_form_by_id_dto: GetFormByIdDto ): Promise<RmqOk<CompleteForm | null>> {
+        return this.default_rmq_handler( this.forms_service.get_form_by_id( get_form_by_id_dto ) );
     }
 
     @RabbitRPC( {
@@ -78,7 +84,7 @@ export class FormsController {
             durable: false,
         }
     } )
-    async get_all_forms (): Promise<RmqOk<Array<ShortForm>>> {
+    async get_all_forms (): Promise<RmqOk<AllFormsShortDto>> {
         return this.default_rmq_handler( this.forms_service.get_all_forms() );
     }
 
@@ -90,6 +96,63 @@ export class FormsController {
     async create_form ( @RabbitPayload() data: CreateFormDto ) {
         return this.default_rmq_handler(
             this.forms_service.create_form( data )
+                .then( ( val ) => {
+                    this.amqp_connection.publish(
+                        EXCHANGES.SHARED_FORMS,
+                        'form.created',
+                        val,
+                    );
+                    return val;
+                } ),
+        );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generate',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generate',
+    } )
+    async generate_form ( @RabbitPayload() data: GenerateFormDto ) {
+        return this.forms_service.generate_form( data ).then( ( val ) => {
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'ai.generate',
+                val,
+            );
+
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'form.pending.update',
+                val,
+            );
+            return val;
+        } );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generation.update',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generation.update',
+    } )
+    async form_generation_update ( @RabbitPayload() data: GenerationUpdateDto ) {
+        return this.forms_service.generation_update( data ).then( ( val ) => {
+            this.amqp_connection.publish(
+                EXCHANGES.SHARED_FORMS,
+                'form.pending.update',
+                val,
+            );
+            return val;
+        } );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.generation.complete',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.generation.complete',
+    } )
+    async form_generation_complete ( @RabbitPayload() data: GenerationCompleteDto ) {
+        return this.default_rmq_handler(
+            this.forms_service.generation_complete( data )
                 .then( ( val ) => {
                     this.amqp_connection.publish(
                         EXCHANGES.SHARED_FORMS,

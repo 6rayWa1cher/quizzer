@@ -2,64 +2,75 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    output          = "../../node_modules/@internal/prisma-forms/client"
-    previewFeatures = ["interactiveTransactions"]
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@internal/prisma-forms/client"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Form {
-    id          Int            @id @default(autoincrement())
-    name        String         @default("") @db.VarChar(32)
-    description String         @default("") @db.VarChar(512)
-    fields      FormField[]
-    responses   FormResponse[]
-    created_at  DateTime       @default(now())
+  id          Int            @id @default(autoincrement())
+  name        String         @default("") @db.VarChar(32)
+  description String         @default("") @db.VarChar(512)
+  fields      FormField[]
+  responses   FormResponse[]
+  created_at  DateTime       @default(now())
+  pending_id  String?        @db.Text()
 }
 
 model FormField {
-    id          Int                 @default(autoincrement())
-    form        Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    form_id     Int
-    name        String              @default("") @db.VarChar(32)
-    description String              @default("") @db.VarChar(256)
-    type        String              @db.VarChar(32)
-    options     FormFieldOption[]
-    responses   FormResponseField[]
+  id               Int                 @default(autoincrement())
+  form             Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  form_id          Int
+  name             String              @default("") @db.VarChar(32)
+  description      String              @default("") @db.VarChar(256)
+  type             String              @db.VarChar(32)
+  options          FormFieldOption[]
+  responses        FormResponseField[]
+  correct_answer   String?             @db.Text()
 
-    @@id([id, form_id])
+  @@id([id, form_id])
 }
 
 model FormFieldOption {
-    id            Int       @id @default(autoincrement())
-    form_field    FormField @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
-    form_id       Int
-    form_field_id Int
-    value         String    @default("") @db.VarChar(64)
+  id            Int       @id @default(autoincrement())
+  form_field    FormField @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
+  form_id       Int
+  form_field_id Int
+  value         String    @default("") @db.VarChar(64)
 }
 
 model FormResponse {
-    id         Int                 @default(autoincrement())
-    form       Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    form_id    Int
-    fields     FormResponseField[]
-    created_at DateTime            @default(now())
+  id         Int                 @default(autoincrement())
+  form       Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  form_id    Int
+  fields     FormResponseField[]
+  created_at DateTime            @default(now())
 
-    @@id([id, form_id])
+  @@id([id, form_id])
 }
 
 model FormResponseField {
-    id               Int          @default(autoincrement())
-    form_field       FormField    @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
-    form_field_id    Int
-    form_id          Int
-    form_response    FormResponse @relation(fields: [form_response_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
-    form_response_id Int
-    data            String       @default("") @db.VarChar(256)
+  id               Int          @default(autoincrement())
+  form_field       FormField    @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
+  form_field_id    Int
+  form_id          Int
+  form_response    FormResponse @relation(fields: [form_response_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
+  form_response_id Int
+  data             String       @default("") @db.VarChar(256)
+  correct_answer   String?      @db.Text()
 
-    @@id([id, form_field_id, form_response_id])
+  @@id([id, form_field_id, form_response_id])
+}
+
+model PendingForm {
+  id              String @id @default(uuid())
+  name            String @db.Text()
+  prompt          String @db.Text()
+  questions_count Int
+  questions_done  Int    @default(0)
 }

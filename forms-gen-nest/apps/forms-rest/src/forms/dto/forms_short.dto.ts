@@ -4,7 +4,7 @@ import { ShortForm } from 'prisma-forms/prisma-forms';
 
 
 @Exclude()
-export class FormDescriptionShortDto {
+export class FormShortDto {
     @ApiProperty()
     @Expose()
     id: number;
