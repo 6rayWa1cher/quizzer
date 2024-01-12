@@ -17,6 +17,10 @@ export class FormShortDto {
     @Expose()
     description: string;
 
+    @ApiProperty()
+    @Expose()
+    pending_id: string;
+
     constructor ( data: ShortForm ) {
         Object.assign( this, data );
     }

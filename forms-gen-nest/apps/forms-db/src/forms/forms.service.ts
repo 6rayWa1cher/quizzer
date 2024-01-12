@@ -266,6 +266,7 @@ export class FormsService {
                             return ret;
                         } ),
                     },
+                    pending_id: generation_complete_dto.id,
                 },
                 include: {
                     fields: {

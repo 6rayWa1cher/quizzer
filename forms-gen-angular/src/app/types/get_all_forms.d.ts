@@ -1,8 +1,8 @@
 import { FormDescriptionShort } from './form_description_short';
+import { PendingFormDto } from './pending_form_dto';
 
 export class GetAllFormsDto {
     forms: Array<FormDescriptionShort>;
 
-    // TODO: fill proper type
-    pending_forms: Array<undefined>;
+    pending_forms: Array<PendingFormDto>;
 }

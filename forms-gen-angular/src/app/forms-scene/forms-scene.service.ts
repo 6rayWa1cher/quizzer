@@ -3,10 +3,12 @@ import { Subject } from 'rxjs';
 import { RestService } from '../rest.service';
 import { FormDescriptionShort } from '../types/form_description_short';
 import { GetAllFormsDto } from '../types/get_all_forms';
+import { PendingFormDto } from '../types/pending_form_dto';
 
 @Injectable()
 export class FormsSceneService {
     update_todo_value_subject: Subject<FormDescriptionShort> = new Subject();
+    update_pending_form_subject: Subject<PendingFormDto> = new Subject();
     sse_listeners_added: boolean = false;
 
     constructor ( private rest_service: RestService ) {
@@ -29,9 +31,8 @@ export class FormsSceneService {
             this.rest_service.add_sse_listener( 'form.created', ( { data } ) => {
                 this.update_todo_value_subject.next( JSON.parse( data ) );
             } );
-            // For testing, should be removed or changed for proper implementation
             this.rest_service.add_sse_listener( 'form.pending.update', ( { data } ) => {
-                console.log( 'PENDING UPDATE', data );
+                this.update_pending_form_subject.next( JSON.parse( data ) );
             } );
         }
     }
