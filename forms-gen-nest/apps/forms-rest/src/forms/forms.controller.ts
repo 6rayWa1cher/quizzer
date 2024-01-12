@@ -9,12 +9,12 @@ import { CreateFormDto } from './dto/create_form.dto';
 import { CreateFormResponseDto } from './dto/create_form_response.dto';
 import { NotFoundExceptionDto } from './dto/exceptions/not_found_exception.dto';
 import { FormDto } from './dto/form.dto';
-import { FormDescriptionShortDto } from './dto/forms_short_list_dto';
 import { FormResponseDto } from './dto/form_response.dto';
 import { FormsService } from './forms.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { GenerateFormDto } from './dto/generate_form.dto';
 import { PendingFormDto } from './dto/pending_form.dto';
+import { GetAllFormsDto } from './dto/get_all_forms.dto';
 
 
 @ApiTags( 'Forms' )
@@ -54,13 +54,11 @@ export class FormsController {
     }
 
     @ApiOperation( { summary: 'Returns short description of all forms' } )
-    @ApiOkResponse( { type: [FormDescriptionShortDto] } )
+    @ApiOkResponse( { type: [GetAllFormsDto] } )
     @Get()
     async get_all_forms () {
         const forms = await this.forms_service.get_all_forms();
-        return _.map( forms, ( val ) => {
-            return new FormDescriptionShortDto( val );
-        } );
+        return new GetAllFormsDto( forms );
     }
 
     @ApiOperation( { summary: 'Creates form' } )

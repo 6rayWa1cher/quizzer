@@ -6,6 +6,7 @@ import { CreateFormResponseDto } from './dto/create_form_response.dto';
 import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/prisma-forms';
 import { CreateFormDto } from './dto/create_form.dto';
 import { GenerateFormDto } from './dto/generate_form.dto';
+import { AllFormsShortDto } from 'apps/forms-db/src/dto/all_forms_short.dto';
 
 @Injectable()
 export class FormsService {
@@ -72,8 +73,8 @@ export class FormsService {
      * @return {*}  {Promise<Array<ShortForm>>}
      * @memberof FormsService
      */
-    async get_all_forms (): Promise<Array<ShortForm>> {
-        return this.amqp_connection.request<RmqOk<Array<ShortForm>>>( {
+    async get_all_forms (): Promise<AllFormsShortDto> {
+        return this.amqp_connection.request<RmqOk<AllFormsShortDto>>( {
             exchange: EXCHANGES.SHARED_FORMS,
             routingKey: 'form.get_all',
             payload: '',

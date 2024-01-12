@@ -28,7 +28,7 @@ export class WindowComponent implements OnInit {
         this.forms_scene_service.get_froms_short()
             .then( ( val ) => {
                 console.log( val );
-                this.forms_list_short = val;
+                this.forms_list_short = val.forms;
                 this.forms_scene_service.enable_sse_listeners();
                 this.forms_scene_service.update_todo_value_subject.subscribe( {
                     next: ( val ) => {

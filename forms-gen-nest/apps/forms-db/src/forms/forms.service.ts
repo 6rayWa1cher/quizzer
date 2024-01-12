@@ -7,6 +7,7 @@ import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
 import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
+import { AllFormsShortDto } from '../dto/all_forms_short.dto';
 
 @Injectable()
 export class FormsService {
@@ -136,12 +137,19 @@ export class FormsService {
         } );
     }
 
-    async get_all_forms (): Promise<Array<ShortForm>> {
-        return this.prisma.form.findMany( {
+    async get_all_forms (): Promise<AllFormsShortDto> {
+        const forms = this.prisma.form.findMany( {
             orderBy: {
                 id: 'asc',
             },
         } );
+        const pending_forms = this.prisma.pendingForm.findMany( {
+            orderBy: {
+                id: 'asc',
+            },
+        } );
+
+        return new AllFormsShortDto( await forms, await pending_forms );
     }
 
     async create_form ( create_form_dto: CreateFormDto ): Promise<CompleteForm> {

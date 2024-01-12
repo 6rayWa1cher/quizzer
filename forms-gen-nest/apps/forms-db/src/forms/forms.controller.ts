@@ -9,6 +9,7 @@ import { RmqError, RmqOk, RmqResponse } from 'rmq/rmq/responses';
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
 import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
+import { AllFormsShortDto } from '../dto/all_forms_short.dto';
 
 
 @Controller( 'forms' )
@@ -81,7 +82,7 @@ export class FormsController {
             durable: false,
         }
     } )
-    async get_all_forms (): Promise<RmqOk<Array<ShortForm>>> {
+    async get_all_forms (): Promise<RmqOk<AllFormsShortDto>> {
         return this.default_rmq_handler( this.forms_service.get_all_forms() );
     }
 

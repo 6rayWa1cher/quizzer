@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RestService } from '../rest.service';
 import { FormDescriptionShort } from '../types/form_description_short';
+import { GetAllFormsDto } from '../types/get_all_forms';
 
 @Injectable()
 export class FormsSceneService {
@@ -12,7 +13,7 @@ export class FormsSceneService {
 
     }
 
-    get_froms_short (): Promise<Array<FormDescriptionShort>> {
+    get_froms_short (): Promise<GetAllFormsDto> {
         return this.rest_service.send_request( undefined, 'GET', 'form' );
     }
 
@@ -28,6 +29,7 @@ export class FormsSceneService {
             this.rest_service.add_sse_listener( 'form.created', ( { data } ) => {
                 this.update_todo_value_subject.next( JSON.parse( data ) );
             } );
+            // For testing, should be removed or changed for proper implementation
             this.rest_service.add_sse_listener( 'form.pending.update', ( { data } ) => {
                 console.log( 'PENDING UPDATE', data );
             } );

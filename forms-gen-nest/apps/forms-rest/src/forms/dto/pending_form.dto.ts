@@ -23,12 +23,12 @@ export class PendingFormDto {
     @ApiProperty()
     @IsInt()
     @Expose()
-    questions_count: string;
+    questions_count: number;
 
     @ApiProperty()
     @IsInt()
     @Expose()
-    questions_done: string;
+    questions_done: number;
 
     constructor ( data: PendingForm ) {
         Object.assign( this, data );
