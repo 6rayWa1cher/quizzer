@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class FieldTextareaComponent implements OnInit {
     @Input() name: string = '';
     @Input() description: string = '';
+    @Input() correct_answer?: string;
 
     @Input() data: string = '';
     @Output() dataChange: EventEmitter<string> = new EventEmitter();

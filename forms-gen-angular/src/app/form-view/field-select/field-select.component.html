@@ -15,7 +15,7 @@
             <mat-divider [vertical]="true"></mat-divider>
             <div class="container">
                 <mat-radio-group class="radio-group" [(ngModel)]="data" (ngModelChange)="data_update($event)">
-                    <mat-radio-button class="radio-button" *ngFor="let prop of options" [value]="prop">
+                    <mat-radio-button [ngClass]="{'radio-button': true, 'option-correct': correct_answer === prop}" *ngFor="let prop of options" [value]="prop">
                         {{prop}}
                     </mat-radio-button>
                 </mat-radio-group>

@@ -12,6 +12,8 @@ import { FormViewService } from '../form-view.service';
 export class WindowComponent implements OnInit {
     loading: boolean = true;
     @Input() form_id!: number;
+    @Input() is_admin: boolean = false;
+
     form: Form = {
         id: -1,
         name: '',
@@ -28,7 +30,7 @@ export class WindowComponent implements OnInit {
         if ( this.form_id == undefined ) {
             throw new Error( 'WindowComponent: form id undefined' );
         }
-        this.form_view_service.get_form_by_id( this.form_id )
+        this.form_view_service.get_form_by_id( this.form_id, this.is_admin )
             .then( ( val ) => {
                 this.form = val;
             } )
