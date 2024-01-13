@@ -17,8 +17,8 @@ export class FormViewService {
         );
     }
 
-    async get_form_by_id ( form_id: number ): Promise<Form> {
-        return this.rest_service.send_request( undefined, 'GET', `form/${form_id}` )
+    async get_form_by_id ( form_id: number, is_admin: boolean ): Promise<Form> {
+        return this.rest_service.send_request( undefined, 'GET', `form/${form_id}`, { 'include_correct_answer': is_admin } )
             .then( ( val ) => {
                 val.created_at = new Date( val.created_at );
                 return val;

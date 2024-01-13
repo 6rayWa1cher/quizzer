@@ -14,18 +14,23 @@
                 {{form.name}}
             </mat-list-option>
         </mat-selection-list>
-        <mat-list #pending_forms class="side-bar">
-            <mat-list-item *ngFor="let form of pending_forms_list" class="pending-item">
-                <div class="pending-item">
-                  <div>
-                    {{form.name}}
-                  </div>
-                  <div class="progress-bar-container">
-                    <mat-progress-bar mode="determinate" [value]="calculatePercent(form)"></mat-progress-bar>
-                  </div>
-                </div>
-            </mat-list-item>
-        </mat-list>
+        <div *ngIf="pending_forms_list && pending_forms_list.length > 0">
+            <mat-list #pending_forms class="side-bar">
+                <mat-list-item>
+                    Generating forms:
+                </mat-list-item>
+                <mat-list-item *ngFor="let form of pending_forms_list" class="pending-item">
+                    <div class="pending-item">
+                    <div>
+                        {{form.name}}
+                    </div>
+                    <div class="progress-bar-container">
+                        <mat-progress-bar mode="determinate" [value]="calculatePercent(form)"></mat-progress-bar>
+                    </div>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </div>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">
