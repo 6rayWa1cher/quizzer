@@ -6,6 +6,9 @@ services:
         restart: "no"
         volumes:
             - ./forms-gen-nest:/app
+        profiles:
+          - "all"
+          - "backend"
         logging:
             options:
                 max-size: "50m"
@@ -24,6 +27,9 @@ services:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=test
+        profiles:
+          - "all"
+          - "backend"
         volumes:
             - ./db-data/:/var/lib/postgresql/data/
 
@@ -37,6 +43,9 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
+        profiles:
+          - "all"
+          - "backend"
         volumes:
             - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - ./rabbitmq-data/mnesia/:/var/lib/rabbitmq/mnesia/
@@ -53,9 +62,13 @@ services:
         logging:
             options:
                 max-size: "50m"
+        profiles:
+          - "all"
+          - "backend"
         environment:
             - PORT=8080
             - HOST=0.0.0.0
+            - BASE_URL=http://localhost:3000
             - AMQP_URL=amqp://guest:guest@rabbitmq:5672
         ports:
             - 3000:8080
@@ -82,6 +95,9 @@ services:
             - AMQP_URL=amqp://rabbitmq:5672
         volumes:
             - ./forms-gen-nest:/app
+        profiles:
+          - "all"
+          - "backend"
         command: bash -c "echo migrating && npm run prisma:forms-db:migrate --prefix=/app && echo launching && npm run start:forms-db:dev --prefix=/app"
 
     angular:
@@ -95,4 +111,7 @@ services:
             - 4200:4200
         volumes:
             - ./forms-gen-angular:/app
+        profiles:
+          - "all"
+          - "frontend"
         command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:dev --prefix=/app"

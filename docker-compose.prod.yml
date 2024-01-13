@@ -72,6 +72,7 @@ services:
         environment:
             - PORT=8080
             - HOST=0.0.0.0
+            - BASE_URL=https://${BASE_HOST}/api
             - AMQP_URL=amqp://guest:guest@rabbitmq:5672
         labels:
             - "traefik.enable=true"
