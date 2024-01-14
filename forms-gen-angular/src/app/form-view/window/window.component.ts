@@ -10,7 +10,8 @@ import { FormViewService } from '../form-view.service';
     styleUrls: ['./window.component.scss'],
 } )
 export class WindowComponent implements OnInit {
-    loading: boolean = true;
+    status: 'loading' | 'ok' | 'submitted' | 'deleted' = 'loading';
+
     @Input() form_id!: number;
     @Input() is_admin: boolean = false;
 
@@ -20,9 +21,8 @@ export class WindowComponent implements OnInit {
         description: '',
         created_at: new Date( 0 ),
         fields: [],
+        form_status: 'ok',
     };
-
-    submitted: boolean = false;
 
     constructor ( private form_view_service: FormViewService ) { }
 
@@ -35,13 +35,19 @@ export class WindowComponent implements OnInit {
                 this.form = val;
             } )
             .finally( () => {
-                this.loading = false;
+                this.status = 'ok';
             } ); ;
     }
 
     form_response ( data: Array<FormFieldResponse> ) {
         this.form_view_service.submit_form( data, this.form.id ).then( () => {
-            this.submitted = true;
+            this.status = 'submitted';
+        } );
+    }
+
+    delete_form () {
+        this.form_view_service.delete_form_by_id( this.form.id ).then( () => {
+            this.status = 'deleted';
         } );
     }
 }

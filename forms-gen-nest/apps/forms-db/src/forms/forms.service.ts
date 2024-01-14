@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import * as _ from 'lodash';
-import { CompleteForm, CompleteFormResponse, PrismaFormsService, PendingForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PrismaFormsService, PendingForm, ShortForm } from 'prisma-forms/prisma-forms';
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
@@ -9,6 +9,7 @@ import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 import { AllFormsShortDto } from '../dto/all_forms_short.dto';
 import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
+import { DeleteFormDto } from 'apps/forms-rest/src/forms/dto/delete_from.dto';
 
 @Injectable()
 export class FormsService {
@@ -18,6 +19,9 @@ export class FormsService {
         return this.prisma.formResponse.findMany( {
             where: {
                 form_id,
+                form: {
+                    form_status: 'ok',
+                },
             },
             orderBy: {
                 id: 'asc',
@@ -121,6 +125,7 @@ export class FormsService {
         const form = await this.prisma.form.findUnique( {
             where: {
                 id: get_form_by_id_dto.id,
+                form_status: 'ok',
             },
             include: {
                 fields: {
@@ -154,6 +159,9 @@ export class FormsService {
 
     async get_all_forms (): Promise<AllFormsShortDto> {
         const forms = this.prisma.form.findMany( {
+            where: {
+                form_status: 'ok',
+            },
             orderBy: {
                 id: 'asc',
             },
@@ -287,6 +295,17 @@ export class FormsService {
                     },
                 },
             } );
+        } );
+    }
+
+    async delete_form ( delete_form_dto: DeleteFormDto ): Promise<ShortForm> {
+        return this.prisma.form.update( {
+            where: {
+                id: delete_form_dto.form_id,
+            },
+            data: {
+                form_status: 'deleted',
+            },
         } );
     }
 }

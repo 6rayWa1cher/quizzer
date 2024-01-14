@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import * as _ from 'lodash';
-import { CompleteForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, FormStatus } from 'prisma-forms/prisma-forms';
 import { FormFieldDto, FormFieldAnyDto, FormFieldInputDto, FormFieldSelectDto, FormFieldTextAreaDto } from './form_field.dto';
 
 
@@ -37,6 +37,14 @@ export class FormDto {
     @ApiProperty()
     @Expose()
     created_at: number;
+
+    @ApiProperty()
+    @Expose()
+    pending_id: string;
+
+    @ApiProperty()
+    @Expose()
+    form_status: FormStatus;
 
     constructor ( data: CompleteForm ) {
         Object.assign( this, data );

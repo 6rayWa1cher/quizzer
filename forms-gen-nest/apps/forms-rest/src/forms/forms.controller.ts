@@ -1,8 +1,8 @@
 import { RabbitPayload, RabbitRPC } from '@golevelup/nestjs-rabbitmq';
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Sse, MessageEvent, ParseBoolPipe, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Sse, MessageEvent, ParseBoolPipe, Query, Delete } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as _ from 'lodash';
-import { CompleteForm, PendingForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, PendingForm, ShortForm } from 'prisma-forms/prisma-forms';
 import { EXCHANGES } from 'rmq/rmq';
 import { CreateFormDto } from './dto/create_form.dto';
 import { CreateFormResponseDto } from './dto/create_form_response.dto';
@@ -104,6 +104,28 @@ export class FormsController {
         this.event_emitter.emit( 'sse.forward', {
             type: 'form.pending.update',
             data: new PendingFormDto( data ),
+        } );
+    }
+
+    @ApiOperation( { summary: 'Generate form using 🦄ai🦄' } )
+    @ApiCreatedResponse()
+    @Delete( ':id' )
+    async delete ( @Param( 'id', new ParseIntPipe() ) id: number ): Promise<void> {
+        return this.forms_service.delete_form( id );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.deleted',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-rest:form.deleted',
+        queueOptions: {
+            durable: false,
+        }
+    } )
+    async form_deleted ( @RabbitPayload() data: ShortForm ) {
+        this.event_emitter.emit( 'sse.forward', {
+            type: 'form.deleted',
+            data: new FormShortDto( data ),
         } );
     }
 }

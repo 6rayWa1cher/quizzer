@@ -9,6 +9,7 @@ import { PendingFormDto } from '../types/pending_form_dto';
 export class FormsSceneService {
     update_todo_value_subject: Subject<FormDescriptionShort> = new Subject();
     update_pending_form_subject: Subject<PendingFormDto> = new Subject();
+    delete_form_subject: Subject<FormDescriptionShort> = new Subject();
     sse_listeners_added: boolean = false;
 
     constructor ( private rest_service: RestService ) {
@@ -33,6 +34,9 @@ export class FormsSceneService {
             } );
             this.rest_service.add_sse_listener( 'form.pending.update', ( { data } ) => {
                 this.update_pending_form_subject.next( JSON.parse( data ) );
+            } );
+            this.rest_service.add_sse_listener( 'form.deleted', ( { data } ) => {
+                this.delete_form_subject.next( JSON.parse( data ) );
             } );
         }
     }
