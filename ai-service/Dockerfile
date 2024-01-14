@@ -6,5 +6,6 @@ COPY ./exchange /app/exchange
 COPY ./run.py /app/run.py
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+RUN pip install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/
 
 CMD ["python", "run.py"]
