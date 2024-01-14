@@ -134,13 +134,18 @@ services:
             - "AI_SERVICE_DO_MOCK=${AI_SERVICE_DO_MOCK}"
         volumes:
           - ai-model-cache:/root/.cache/huggingface
-        deploy:
+
+        {% if ai_mock is false %}deploy:
             resources:
                 reservations:
                     devices:
                         - driver: nvidia
                           count: all
                           capabilities: [gpu]
+        {% endif %}
+
+
+
 volumes:
     pg-data:
     ai-model-cache:

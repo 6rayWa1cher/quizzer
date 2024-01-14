@@ -8,7 +8,7 @@ from ai.generators import PollGenerator
 
 def main() -> None:
     """ Основная функция. """
-    do_mock: bool = bool(os.environ.get('AI_SERVICE_DO_MOCK'))
+    do_mock: bool = bool(os.environ.get('AI_SERVICE_DO_MOCK') == 'true')
     rabbit_host: str = os.environ.get('AI_RABBIT_HOST')
 
     print("do_mock", do_mock)
