@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "Form" ALTER COLUMN "name" SET DATA TYPE TEXT,
+ALTER COLUMN "description" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "FormField" ALTER COLUMN "name" SET DATA TYPE TEXT,
+ALTER COLUMN "description" SET DATA TYPE TEXT,
+ALTER COLUMN "type" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "FormFieldOption" ALTER COLUMN "value" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "FormResponseField" ALTER COLUMN "data" SET DATA TYPE TEXT;
