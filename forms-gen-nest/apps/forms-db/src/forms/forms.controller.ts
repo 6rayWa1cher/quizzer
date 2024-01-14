@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { RabbitRPC, RabbitPayload, AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { EXCHANGES } from 'rmq/rmq';
 import { FormsService } from './forms.service';
-import { CompleteForm, CompleteFormResponse, ShortForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PendingForm, ShortForm } from 'prisma-forms/prisma-forms';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
 import { RmqError, RmqOk, RmqResponse } from 'rmq/rmq/responses';
@@ -11,6 +11,7 @@ import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
 import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
 import { AllFormsShortDto } from '../dto/all_forms_short.dto';
 import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
+import { DeleteFormDto } from 'apps/forms-rest/src/forms/dto/delete_from.dto';
 
 
 @Controller( 'forms' )
@@ -93,7 +94,7 @@ export class FormsController {
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.post',
     } )
-    async create_form ( @RabbitPayload() data: CreateFormDto ) {
+    async create_form ( @RabbitPayload() data: CreateFormDto ): Promise<RmqOk<CompleteForm | null>> {
         return this.default_rmq_handler(
             this.forms_service.create_form( data )
                 .then( ( val ) => {
@@ -112,7 +113,7 @@ export class FormsController {
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.generate',
     } )
-    async generate_form ( @RabbitPayload() data: GenerateFormDto ) {
+    async generate_form ( @RabbitPayload() data: GenerateFormDto ): Promise<PendingForm | null> {
         return this.forms_service.generate_form( data ).then( ( val ) => {
             this.amqp_connection.publish(
                 EXCHANGES.SHARED_FORMS,
@@ -134,7 +135,7 @@ export class FormsController {
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.generation.update',
     } )
-    async form_generation_update ( @RabbitPayload() data: GenerationUpdateDto ) {
+    async form_generation_update ( @RabbitPayload() data: GenerationUpdateDto ): Promise<PendingForm | null> {
         return this.forms_service.generation_update( data ).then( ( val ) => {
             this.amqp_connection.publish(
                 EXCHANGES.SHARED_FORMS,
@@ -150,13 +151,32 @@ export class FormsController {
         exchange: EXCHANGES.SHARED_FORMS,
         queue: 'forms-db:form.generation.complete',
     } )
-    async form_generation_complete ( @RabbitPayload() data: GenerationCompleteDto ) {
+    async form_generation_complete ( @RabbitPayload() data: GenerationCompleteDto ): Promise<RmqOk<CompleteForm | null>> {
         return this.default_rmq_handler(
             this.forms_service.generation_complete( data )
                 .then( ( val ) => {
                     this.amqp_connection.publish(
                         EXCHANGES.SHARED_FORMS,
                         'form.created',
+                        val,
+                    );
+                    return val;
+                } ),
+        );
+    }
+
+    @RabbitRPC( {
+        routingKey: 'form.delete',
+        exchange: EXCHANGES.SHARED_FORMS,
+        queue: 'forms-db:form.delete',
+    } )
+    async form_delete ( @RabbitPayload() data: DeleteFormDto ): Promise<RmqOk<ShortForm | null>> {
+        return this.default_rmq_handler(
+            this.forms_service.delete_form( data )
+                .then( ( val ) => {
+                    this.amqp_connection.publish(
+                        EXCHANGES.SHARED_FORMS,
+                        'form.deleted',
                         val,
                     );
                     return val;

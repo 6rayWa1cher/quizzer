@@ -34,6 +34,8 @@ const pending_form = Prisma.validator<Prisma.PendingFormArgs>()( {} );
 
 export type PendingForm = Prisma.PendingFormGetPayload<typeof pending_form>
 
+export type FormStatus = CompleteForm['form_status'];
+
 // export type FormField = CompleteForm['fields'][0]
 
 // export type FormFieldWithGivenResponse = FormField & { given_answer: string };

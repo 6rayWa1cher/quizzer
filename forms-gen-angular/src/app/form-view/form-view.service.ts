@@ -24,4 +24,8 @@ export class FormViewService {
                 return val;
             } );
     }
+
+    async delete_form_by_id ( form_id: number ): Promise<Form> {
+        return this.rest_service.send_request( undefined, 'DELETE', `form/${form_id}` );
+    }
 }

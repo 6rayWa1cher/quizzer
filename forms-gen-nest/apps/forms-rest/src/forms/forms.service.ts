@@ -8,6 +8,7 @@ import { CreateFormDto } from './dto/create_form.dto';
 import { GenerateFormDto } from './dto/generate_form.dto';
 import { AllFormsShortDto } from 'apps/forms-db/src/dto/all_forms_short.dto';
 import { GetFormByIdDto } from './dto/get_form_by_id.dto';
+import { DeleteFormDto } from './dto/delete_from.dto';
 
 @Injectable()
 export class FormsService {
@@ -114,6 +115,20 @@ export class FormsService {
             EXCHANGES.SHARED_FORMS,
             'form.generate',
             generate_form_dto,
+        );
+    }
+
+    /**
+     * Warning: nonlocal function. Calls similar function from form-db service
+     *
+     * @param {number} form_id
+     * @memberof FormsService
+     */
+    async delete_form ( form_id: number ) {
+        this.amqp_connection.publish(
+            EXCHANGES.SHARED_FORMS,
+            'form.delete',
+            new DeleteFormDto( form_id ),
         );
     }
 }

@@ -3,6 +3,7 @@
         <mat-card-title>
             <button mat-button color="accent" (click)="create_request.emit()">Send response</button>
             <button mat-button *ngIf="closable" color="warn" (click)="close_request.emit()">Close</button>
+            <button mat-button *ngIf="can_be_deleted" color="error" (click)="delete_request.emit()">Delete</button>
         </mat-card-title>
     </mat-card>
 </div>

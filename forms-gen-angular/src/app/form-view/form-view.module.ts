@@ -20,6 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormViewService } from './form-view.service';
+import { DeletedComponent } from './deleted/deleted.component';
 
 
 @NgModule( {
@@ -33,6 +34,7 @@ import { FormViewService } from './form-view.service';
         HeaderComponent,
         FooterComponent,
         SubmittedComponent,
+        DeletedComponent,
     ],
     imports: [
         CommonModule,

@@ -51,7 +51,15 @@ export class WindowComponent implements OnInit {
                         this.changeDetectorRef.detectChanges();
                     },
                 } );
-                console.log( 'meow' + this.pending_forms_list );
+                this.forms_scene_service.delete_form_subject.subscribe( {
+                    next: ( val ) => {
+                        console.log( 'Form deleted', val );
+                        _.remove( this.forms_list_short, ( form ) => {
+                            return form.id === val.id;
+                        } );
+                        this.changeDetectorRef.detectChanges();
+                    },
+                } );
             } )
             .finally( () => {
                 this.loading = false;

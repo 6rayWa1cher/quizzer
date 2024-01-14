@@ -12,6 +12,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FormStatus {
+  ok
+  deleted
+}
+
 model Form {
   id          Int            @id @default(autoincrement())
   name        String         @default("") @db.VarChar(32)
@@ -20,6 +25,7 @@ model Form {
   responses   FormResponse[]
   created_at  DateTime       @default(now())
   pending_id  String?        @db.Text()
+  form_status FormStatus     @default(ok)
 }
 
 model FormField {
