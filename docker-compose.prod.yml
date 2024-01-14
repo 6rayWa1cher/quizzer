@@ -121,6 +121,9 @@ services:
         build:
             context: ./ai-service
             dockerfile: Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_started
         container_name: forms-ai-service
         restart: "unless-stopped"
         logging:
