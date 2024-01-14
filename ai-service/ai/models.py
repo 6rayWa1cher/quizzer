@@ -12,7 +12,7 @@ class CombinedModel:
     объект взаимодействия с Google Translate. """
 
     def __init__(self):
-        model_name_or_path = "TheBloke/Llama-2-13B-GPTQ"
+        model_name_or_path = "TheBloke/Llama-2-13B-chat-GPTQ"
         revision = "gptq-4bit-32g-actorder_True"
 
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
