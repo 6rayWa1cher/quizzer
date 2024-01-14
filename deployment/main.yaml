@@ -186,3 +186,6 @@
                 - forms-rest
                 - forms-db
                 - angular
+
+      - name: Clear build caches
+        shell: docker builder prune -f

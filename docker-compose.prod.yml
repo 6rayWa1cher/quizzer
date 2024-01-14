@@ -117,5 +117,27 @@ services:
             - "traefik.http.routers.angular.tls.certresolver=myresolver"
             - "traefik.http.services.angular.loadbalancer.server.port=80"
 
+    ai-service:
+        build:
+            context: ./ai-service
+            dockerfile: Dockerfile
+        container_name: forms-ai-service
+        restart: "unless-stopped"
+        logging:
+            options:
+                max-size: "50m"
+        environment:
+            - "AI_RABBIT_HOST=amqp://rabbitmq:5672"
+            - "AI_SERVICE_DO_MOCK=${AI_SERVICE_DO_MOCK}"
+        volumes:
+          - ai-model-cache:/root/.cache/huggingface
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]
 volumes:
     pg-data:
+    ai-model-cache:
