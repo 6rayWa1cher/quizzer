@@ -62,6 +62,7 @@ export class WindowComponent implements OnInit, OnChanges {
                             return form.id === val.id;
                         } );
                         this.rerender();
+                        this.changeDetectorRef.detectChanges();
                     },
                 } );
             } )
@@ -98,7 +99,7 @@ export class WindowComponent implements OnInit, OnChanges {
         } );
     }
 
-    rerender () {
+    async rerender () {
         this.forms_ok_number = this.forms_list_short.length;
         this.forms_pending_number = this.pending_forms_list.length;
         this.forms_total_number = this.forms_ok_number + this.forms_pending_number;
