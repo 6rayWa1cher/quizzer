@@ -22,7 +22,7 @@ services:
             options:
                 max-size: "50m"
         ports:
-            - 5432:5432
+            - "127.0.0.1:5432:5432"
         environment:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
@@ -41,8 +41,8 @@ services:
             options:
                 max-size: "50m"
         ports:
-            - 5672:5672
-            - 15672:15672
+            - "127.0.0.1:5672:5672"
+            - "127.0.0.1:15672:15672"
         profiles:
           - "all"
           - "backend"

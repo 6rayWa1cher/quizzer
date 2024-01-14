@@ -16,7 +16,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
-            - "8080:8080"
+            - "127.0.0.1:8080:8080"
         volumes:
             - "./letsencrypt:/letsencrypt"
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -51,8 +51,7 @@ services:
             options:
                 max-size: "50m"
         ports:
-            - 5672:5672
-            - 15672:15672
+            - "127.0.0.1:15672:15672"
         volumes:
             - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - ./rabbitmq-data/mnesia-prod/:/var/lib/rabbitmq/mnesia/ # probably should be changed or removed
