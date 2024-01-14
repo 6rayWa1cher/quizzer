@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import { lastValueFrom } from 'rxjs';
@@ -12,11 +12,14 @@ import { PendingFormDto } from 'src/app/types/pending_form_dto';
     templateUrl: './window.component.html',
     styleUrls: ['./window.component.scss'],
 } )
-export class WindowComponent implements OnInit {
+export class WindowComponent implements OnInit, OnChanges {
     forms_list_short: Array<FormDescriptionShort> = [];
     pending_forms_list: Array<PendingFormDto> = [];
     loading: boolean = true;
     test: boolean = false;
+    forms_ok_number: number = 0;
+    forms_pending_number: number = 0;
+    forms_total_number: number = 0;
     @ViewChild( 'button_create' ) button_create!: any;
 
     selected_id: number | undefined = 0;
@@ -34,13 +37,14 @@ export class WindowComponent implements OnInit {
                 console.log( val );
                 this.forms_list_short = val.forms;
                 this.pending_forms_list = val.pending_forms;
+                this.rerender();
                 this.forms_scene_service.enable_sse_listeners();
                 this.forms_scene_service.update_todo_value_subject.subscribe( {
                     next: ( val ) => {
                         console.log( 'Form added', val );
                         this.push_form( val );
                         this.pending_forms_list = this.pending_forms_list.filter( ( pending_form ) => pending_form.id !== val.pending_id );
-                        this.changeDetectorRef.detectChanges();
+                        this.rerender();
                     },
                 } );
                 this.forms_scene_service.update_pending_form_subject.subscribe( {
@@ -48,7 +52,7 @@ export class WindowComponent implements OnInit {
                         console.log( 'Pending form update received', val );
                         const index = _.findIndex( this.pending_forms_list, ['id', val.id] );
                         this.pending_forms_list[index >= 0 ? index : this.pending_forms_list.length] = val;
-                        this.changeDetectorRef.detectChanges();
+                        this.rerender();
                     },
                 } );
                 this.forms_scene_service.delete_form_subject.subscribe( {
@@ -57,13 +61,17 @@ export class WindowComponent implements OnInit {
                         _.remove( this.forms_list_short, ( form ) => {
                             return form.id === val.id;
                         } );
-                        this.changeDetectorRef.detectChanges();
+                        this.rerender();
                     },
                 } );
             } )
             .finally( () => {
                 this.loading = false;
             } );
+    }
+
+    ngOnChanges () {
+        console.log( 'updated' );
     }
 
     calculatePercent ( form: PendingFormDto ): number {
@@ -88,6 +96,12 @@ export class WindowComponent implements OnInit {
             //     this.forms_list_short = val;
             // } );
         } );
+    }
+
+    rerender () {
+        this.forms_ok_number = this.forms_list_short.length;
+        this.forms_pending_number = this.pending_forms_list.length;
+        this.forms_total_number = this.forms_ok_number + this.forms_pending_number;
     }
 
     selection_change ( val: number | undefined ) {
