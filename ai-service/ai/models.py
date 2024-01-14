@@ -5,6 +5,7 @@ from typing import Dict
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from googletrans import Translator
+from auto_gptq import exllama_set_max_input_length
 
 
 class CombinedModel:
@@ -20,6 +21,7 @@ class CombinedModel:
                                                         device_map="auto",
                                                         trust_remote_code=False,
                                                         revision=revision)
+        self.llm = exllama_set_max_input_length(self.llm, max_input_length=8192)
         self.llm_tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
         self.translator = Translator()
 
