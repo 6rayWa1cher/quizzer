@@ -53,6 +53,7 @@ export class WindowComponent implements OnInit, OnChanges {
                         const index = _.findIndex( this.pending_forms_list, ['id', val.id] );
                         this.pending_forms_list[index >= 0 ? index : this.pending_forms_list.length] = val;
                         this.rerender();
+                        this.changeDetectorRef.detectChanges();
                     },
                 } );
                 this.forms_scene_service.delete_form_subject.subscribe( {
