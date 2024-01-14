@@ -27,7 +27,7 @@ class CombinedGenerator:
 
     def parse_questions(self, raw_questions: str) -> List[str]:
         """ Парсит результат выполнения generate_questions. """
-        print("parse_questions", raw_questions, flush=True)
+        print("parse_questions", ">>>>>>>>>>>>>", raw_questions, "<<<<<<<<<<<<", flush=True)
         return parse_generated_questions(raw_questions)
 
     def next_answer(self,
@@ -55,7 +55,7 @@ class CombinedGenerator:
 
     def parse_answer(self, raw_answer: str) -> str:
         """ Парсит ответы, полученные из next_answer """
-        print("raw_answer: ", raw_answer, flush=True)
+        print("raw_answer: ", ">>>>>>>>>>>>>", raw_answer, "<<<<<<<<<<<<<", flush=True)
         return parse_generated_answer(raw_answer)
 
 
@@ -168,8 +168,8 @@ class PollGenerator:
 
             if rabbit_sender is not None:
                 rabbit_sender.generation_rabbit_update(rabbit_id, i + 1, len(questions))
-        print("stats", statuses_list, flush=True)
-        print("ans", answers_list, flush=True)
+        print("stats", ">>>>>>>>>>>>>", statuses_list, "<<<<<<<<<<<<", flush=True)
+        print("ans", ">>>>>>>>>>>>>", answers_list, "<<<<<<<<<<<<", flush=True)
         return [{
             "question": self.generator.model.translate_to(question, "ru"),
             "answers": [self.generator.model.translate_to(answer, "ru") for answer in answers],

@@ -38,7 +38,7 @@ def parse_generated_questions(model_answer: str) -> List[str]:
     """ Парсит ответ модели на промпт, возвращаемый функцией construct_quest_prompt.
     Возвращает только вопросы в виде списка строк."""
 
-    print('model_answer', model_answer, flush=True)
+    print('model_answer', ">>>>>>>>>>>>>", model_answer, "<<<<<<<<<<<<", flush=True)
     parsed_answer = model_answer.split("[/INST]")[1]
     parsed_answer = parsed_answer.rstrip("</s>").strip()
     parsed_answer_list = list(map(str.strip, parsed_answer.split("?")))
