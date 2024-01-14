@@ -11,15 +11,20 @@ from ai.generators import PollGenerator
 class RabbitSender:
     """ Класс отправки сообщений в RabbitMQ. """
 
-    def __init__(self, connection: pika.BlockingConnection | None = None):
+    def __init__(self,
+                 connection: pika.BlockingConnection | None = None,
+                 rabbit_host: str = "localhost"):
         if connection is None:
-            self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+            self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
         else:
             self.connection = connection
 
         self.channel = self.connection.channel()
 
-    def generation_rabbit_update(self, rabbit_id: str, questions_done: int, questions_count: int) -> None:
+    def generation_rabbit_update(self,
+                                 rabbit_id: str,
+                                 questions_done: int,
+                                 questions_count: int) -> None:
         """ Отправляет в очередь сообщение об обновлении статуса генерации вопросов. """
 
         message = {
@@ -53,11 +58,11 @@ class RabbitSender:
 class RabbitReceiver:
     """ Класс получения сообщений от RabbitMQ. """
 
-    def __init__(self, poll_generator: PollGenerator):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    def __init__(self, poll_generator: PollGenerator, rabbit_host: str):
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
         self.channel = self.connection.channel()
 
-        self.rabbit_sender = RabbitSender(self.connection)
+        self.rabbit_sender = RabbitSender(connection=self.connection, rabbit_host=rabbit_host)
 
         self.channel.exchange_declare(exchange='SHARED_FORMS',
                                       durable=True,
