@@ -172,5 +172,5 @@ class PollGenerator:
         return [{
             "question": self.generator.model.translate_to(question, "ru"),
             "answers": [self.generator.model.translate_to(answer, "ru") for answer in answers],
-            "correct_answer": statuses
+            "correct_answer": answers_list[statuses.index(True)]
         } for question, answers, statuses in zip(questions, answers_list, statuses_list)]
