@@ -27,7 +27,7 @@ class CombinedGenerator:
 
     def parse_questions(self, raw_questions: str) -> List[str]:
         """ Парсит результат выполнения generate_questions. """
-
+        print(raw_questions)
         return parse_generated_questions(raw_questions)
 
     def next_answer(self,
@@ -55,7 +55,7 @@ class CombinedGenerator:
 
     def parse_answer(self, raw_answer: str) -> str:
         """ Парсит ответы, полученные из next_answer """
-
+        print("raw_answer: ", raw_answer)
         return parse_generated_answer(raw_answer)
 
 
