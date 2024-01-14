@@ -61,7 +61,7 @@ class CombinedGenerator:
 
 class MockGenerator:
     """ Позволяет взаимодействовать с MockModel: генерировать вопросы, ответы и парсить их. """
-    
+
     def __init__(self):
         self.model = MockModel()
 
@@ -118,7 +118,7 @@ class PollGenerator:
                            user_theme: str,
                            question_cnt: int | None = None,
                            generate_params: Dict | None = None) -> List[str]:
-        """ Генерирует question_cnt вопросов на тему user_theme. """        
+        """ Генерирует question_cnt вопросов на тему user_theme. """
         raw_questions = self.generator.generate_questions(user_theme, question_cnt, generate_params)
         return self.generator.parse_questions(raw_questions)
 
@@ -136,7 +136,7 @@ class PollGenerator:
             answers.append(self.generator.parse_answer(answer))
 
         return answers, correctness
-    
+
     class CompleteQuestion(TypedDict):
         """ Тип опроса данных опроса. """
         question: str
@@ -168,9 +168,10 @@ class PollGenerator:
 
             if rabbit_sender is not None:
                 rabbit_sender.generation_rabbit_update(rabbit_id, i + 1, len(questions))
-
+        print("stats", statuses_list, flush=True)
+        print("ans", answers_list, flush=True)
         return [{
             "question": self.generator.model.translate_to(question, "ru"),
             "answers": [self.generator.model.translate_to(answer, "ru") for answer in answers],
-            "correct_answer": answers_list[statuses.index(True)]
+            "correct_answer": self.generator.model.translate_to(answers[statuses.index(True)], "ru")
         } for question, answers, statuses in zip(questions, answers_list, statuses_list)]

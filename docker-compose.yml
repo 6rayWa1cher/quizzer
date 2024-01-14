@@ -41,8 +41,8 @@ services:
             options:
                 max-size: "50m"
         ports:
-            - "127.0.0.1:5672:5672"
-            - "127.0.0.1:15672:15672"
+            - "5672:5672"
+            - "15672:15672"
         profiles:
           - "all"
           - "backend"
@@ -115,3 +115,31 @@ services:
           - "all"
           - "frontend"
         command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:dev --prefix=/app"
+
+    ai-service:
+        build:
+            context: ./ai-service
+            dockerfile: Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_started
+        container_name: forms-ai-service
+        restart: "unless-stopped"
+        logging:
+            options:
+                max-size: "50m"
+        environment:
+            - AI_RABBIT_HOST=amqp://guest:guest@rabbitmq:5672/
+            - AI_SERVICE_DO_MOCK=${AI_SERVICE_DO_MOCK:-true}
+        volumes:
+          - ./ai-model-cache:/root/.cache/huggingface
+        profiles:
+          - "all"
+          - "backend"
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]

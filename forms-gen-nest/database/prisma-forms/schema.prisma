@@ -19,7 +19,7 @@ enum FormStatus {
 
 model Form {
   id          Int            @id @default(autoincrement())
-  name        String         @default("") @db.VarChar(32)
+  name        String         @default("") @db.VarChar(256)
   description String         @default("") @db.VarChar(512)
   fields      FormField[]
   responses   FormResponse[]
@@ -32,7 +32,7 @@ model FormField {
   id               Int                 @default(autoincrement())
   form             Form                @relation(fields: [form_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   form_id          Int
-  name             String              @default("") @db.VarChar(32)
+  name             String              @default("") @db.VarChar(256)
   description      String              @default("") @db.VarChar(256)
   type             String              @db.VarChar(32)
   options          FormFieldOption[]
@@ -47,7 +47,7 @@ model FormFieldOption {
   form_field    FormField @relation(fields: [form_field_id, form_id], references: [id, form_id], onDelete: Cascade, onUpdate: Cascade)
   form_id       Int
   form_field_id Int
-  value         String    @default("") @db.VarChar(64)
+  value         String    @default("") @db.VarChar(256)
 }
 
 model FormResponse {

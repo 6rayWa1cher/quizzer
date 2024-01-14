@@ -6,3 +6,5 @@ rabbitmq-data/mnesia-prod
 
 .env
 letsencrypt
+
+ai-model-cache
