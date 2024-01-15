@@ -15,6 +15,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Throder-TVRS",
+      "name": "Nikita Fomin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53103607?v=4",
+      "profile": "https://github.com/Throder-TVRS",
+      "contributions": [
+        "code",
+        "research"
+      ]
     }
   ],
   "contributorsPerLine": 7,
