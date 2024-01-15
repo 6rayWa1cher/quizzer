@@ -165,10 +165,10 @@ class PollGenerator:
             answers, correct_answer = self.generate_answers(question,
                                                             generate_params=answer_generate_params)
 
+            answers = list(set(answers))
+
             answers_list.append(answers)
             correct_answers.append(correct_answer)
-
-            answers = list(set(answers))
 
             if rabbit_sender is not None:
                 rabbit_sender.generation_rabbit_update(rabbit_id, i + 1, len(questions))
