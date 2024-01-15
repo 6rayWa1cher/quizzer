@@ -119,7 +119,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Alstrasz"><img src="https://avatars.githubusercontent.com/u/47223797?v=4?s=100" width="100px;" alt="Andrew Lutsai"/><br /><sub><b>Andrew Lutsai</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=Alstrasz" title="Code">💻</a></td>
+
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/baranovatm"><img src="https://avatars.githubusercontent.com/u/56389893?v=4?s=100" width="100px;" alt="Tatiana"/><br /><sub><b>Tatiana</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=baranovatm" title="Code">💻</a> <a href="#design-baranovatm" title="Design">🎨</a></td>
+
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Throder-TVRS"><img src="https://avatars.githubusercontent.com/u/53103607?v=4?s=100" width="100px;" alt="Nikita Fomin"/><br /><sub><b>Nikita Fomin</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=Throder-TVRS" title="Code">💻</a> <a href="#research-Throder-TVRS" title="Research">🔬</a></td>
+
     </tr>
   </tbody>
 </table>
