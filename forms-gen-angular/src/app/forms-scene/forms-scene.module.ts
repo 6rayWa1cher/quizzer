@@ -13,8 +13,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormEditorWrapperComponent } from './form-editor-wrapper/form-editor-wrapper.component';
+import { AIFormEditorWrapperComponent } from './ai-form-editor-wrapper/ai-form-editor-wrapper.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsSceneService } from './forms-scene.service';
+import { AIFormEditorComponent } from './ai-form-editor/ai-form-editor';
+import { MatCardModule } from '@angular/material/card'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule( {
@@ -22,12 +28,15 @@ import { FormsSceneService } from './forms-scene.service';
         WindowComponent,
         TabsComponent,
         FormEditorWrapperComponent,
+        AIFormEditorWrapperComponent,
+        AIFormEditorComponent
     ],
     imports: [
         CommonModule,
         FormEditorModule,
         FormResponsesModule,
         FormViewModule,
+        MatCardModule,
         MatSidenavModule,
         MatToolbarModule,
         MatIconModule,
@@ -36,6 +45,9 @@ import { FormsSceneService } from './forms-scene.service';
         MatTabsModule,
         MatDialogModule,
         MatProgressSpinnerModule,
+        MatFormFieldModule,
+        FormsModule,
+        MatInputModule
     ],
     exports: [
         WindowComponent,

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RestService } from '../rest.service';
 import { FormDescriptionShort } from '../types/form_description_short';
+import { CreateAiForm } from '../types/create_ai_form';
 
 @Injectable()
 export class FormsSceneService {
@@ -30,4 +31,9 @@ export class FormsSceneService {
             } );
         }
     }
+
+    generate_form (create_ai_form: CreateAiForm) {
+        return this.rest_service.send_request( create_ai_form, 'POST', 'form/generate' );
+    }
+
 }

@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { lastValueFrom } from 'rxjs';
 import { FormDescriptionShort } from 'src/app/types/form_description_short';
 import { FormEditorWrapperComponent } from '../form-editor-wrapper/form-editor-wrapper.component';
+import { AIFormEditorWrapperComponent } from '../ai-form-editor-wrapper/ai-form-editor-wrapper.component';
 import { FormsSceneService } from '../forms-scene.service';
 
 @Component( {
@@ -55,6 +56,15 @@ export class WindowComponent implements OnInit {
             // this.forms_scene_service.get_froms_short().then( ( val ) => {
             //     this.forms_list_short = val;
             // } );
+        } );
+    }
+
+    create_new_ai_form () {
+        lastValueFrom( this.dialog.open( AIFormEditorWrapperComponent, {
+            width: '90%',
+            position: { top: '5vh' },
+            maxHeight: '90vh',
+        } ).afterClosed() ).then( () => {
         } );
     }
 
