@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { FormFieldResponse } from 'src/app/types/form_field_response';
 import { Form } from '../../types/form';
 import { FormViewService } from '../form-view.service';
+import { FormResponse } from 'src/app/types/form_response';
 
 @Component( {
     selector: 'form-view-window',
@@ -24,6 +25,8 @@ export class WindowComponent implements OnInit {
         form_status: 'ok',
     };
 
+    form_response?: FormResponse = undefined;
+
     constructor ( private form_view_service: FormViewService ) { }
 
     ngOnInit (): void {
@@ -39,9 +42,11 @@ export class WindowComponent implements OnInit {
             } ); ;
     }
 
-    form_response ( data: Array<FormFieldResponse> ) {
-        this.form_view_service.submit_form( data, this.form.id ).then( () => {
+    send_form_response ( data: Array<FormFieldResponse> ) {
+        this.form_view_service.submit_form( data, this.form.id ).then( ( val ) => {
+            this.form_response = val;
             this.status = 'submitted';
+            console.log( this.form_response );
         } );
     }
 

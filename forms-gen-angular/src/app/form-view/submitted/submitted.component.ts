@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormResponse } from 'src/app/types/form_response';
 
 @Component( {
     selector: 'form-view-submitted',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./submitted.component.scss'],
 } )
 export class SubmittedComponent implements OnInit {
+    @Input() form_response?: FormResponse;
+
     constructor () { }
 
     ngOnInit (): void {

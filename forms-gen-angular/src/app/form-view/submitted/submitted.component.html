@@ -10,3 +10,6 @@
         </mat-card-content>
     </mat-card>
 </div>
+<div *ngIf="form_response" class="container mat-elevation-z2">
+    <form-responses-response-box [response]="form_response" [name]="'Recorded response'" ></form-responses-response-box>
+</div>

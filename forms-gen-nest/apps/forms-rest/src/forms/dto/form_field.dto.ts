@@ -13,13 +13,11 @@ export class FormFieldAnyDto {
     @ApiProperty()
     @Expose()
     @IsString()
-    @MaxLength( 32 )
     name: string;
 
     @ApiProperty()
     @Expose()
     @IsString()
-    @MaxLength( 256 )
     description: string;
 
     @ApiProperty()
@@ -71,7 +69,6 @@ export class FormFieldSelectDto extends FormFieldAnyDto {
     @Expose()
     @IsArray()
     @IsString( { each: true } )
-    @MaxLength( 64, { each: true } )
     options: Array<string>;
 
     constructor ( data: CompleteForm['fields'][0] ) {

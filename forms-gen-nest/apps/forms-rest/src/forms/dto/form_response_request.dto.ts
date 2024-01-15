@@ -10,6 +10,5 @@ export class FormFieldResponseRequestDto {
 
     @ApiProperty()
     @IsString()
-    @MaxLength( 256 )
     data: string;
 }

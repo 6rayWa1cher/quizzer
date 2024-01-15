@@ -11,7 +11,7 @@
         </div>
         <mat-selection-list #forms [multiple]="false" class="side-bar" (selectionChange)="selection_change(forms.selectedOptions.selected[0].value)">
             <mat-list-item>
-                <h4>Available {{forms_ok_number}} form{{forms_ok_number > 1 ? "s" : ""}}:</h4>
+                <h4>Available {{forms_ok_number}} form{{forms_ok_number === 1 ? "" : "s"}}:</h4>
             </mat-list-item>
             <mat-list-option *ngFor="let form of forms_list_short" [value]="form.id">
                 {{form.name}}
@@ -20,7 +20,7 @@
         <div *ngIf="pending_forms_list && pending_forms_list.length > 0">
             <mat-list #pending_forms class="side-bar">
                 <mat-list-item>
-                    <h4>Generating {{forms_pending_number}} form{{forms_pending_number > 1 ? "s" : ""}}:</h4>
+                    <h4>Generating {{forms_pending_number}} form{{forms_pending_number === 1 ? "" : "s"}}:</h4>
                 </mat-list-item>
                 <mat-list-item *ngFor="let form of pending_forms_list" class="pending-item">
                     <div class="pending-item">
