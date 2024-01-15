@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { FormDescriptionShort } from 'src/app/types/form_description_short';
 import { FormEditorWrapperComponent } from '../form-editor-wrapper/form-editor-wrapper.component';
 import { FormsSceneService } from '../forms-scene.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PendingFormDto } from 'src/app/types/pending_form_dto';
 
 @Component( {
@@ -28,6 +29,7 @@ export class WindowComponent implements OnInit, OnChanges {
         private dialog: MatDialog,
         private forms_scene_service: FormsSceneService,
         private changeDetectorRef: ChangeDetectorRef,
+        private snack_bar: MatSnackBar,
     ) {}
 
     ngOnInit (): void {
@@ -45,6 +47,9 @@ export class WindowComponent implements OnInit, OnChanges {
                         this.push_form( val );
                         this.pending_forms_list = this.pending_forms_list.filter( ( pending_form ) => pending_form.id !== val.pending_id );
                         this.rerender();
+                        this.snack_bar.open(
+                            'New form!', 'Close', { duration: 3000 },
+                        );
                     },
                 } );
                 this.forms_scene_service.update_pending_form_subject.subscribe( {
