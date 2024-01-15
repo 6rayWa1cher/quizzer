@@ -135,7 +135,8 @@ class PollGenerator:
         for answer in self.generator.next_answer(question, correctness, generate_params):
             answers.append(self.generator.parse_answer(answer))
 
-        return answers, correctness
+        correct_answer = answers[correctness.index(True)]
+        return answers, correct_answer
 
     class CompleteQuestion(TypedDict):
         """ Тип опроса данных опроса. """
@@ -158,13 +159,14 @@ class PollGenerator:
                                             question_generate_params)
 
         answers_list: List[List[str]] = []
-        statuses_list: List[List[bool]] = []
+        correct_answers: List[str] = []
 
         for i, question in enumerate(questions):
-            answers, statuses = self.generate_answers(question, generate_params=answer_generate_params)
+            answers, correct_answer = self.generate_answers(question,
+                                                            generate_params=answer_generate_params)
 
             answers_list.append(answers)
-            statuses_list.append(statuses)
+            correct_answers.append(correct_answer)
 
             if rabbit_sender is not None:
                 rabbit_sender.generation_rabbit_update(rabbit_id, i + 1, len(questions))
@@ -172,5 +174,5 @@ class PollGenerator:
         return [{
             "question": question,
             "answers": answers,
-            "correct_answer": answers[statuses.index(True)]
-        } for question, answers, statuses in zip(questions, answers_list, statuses_list)]
+            "correct_answer": correct_answer
+        } for question, answers, correct_answer in zip(questions, answers_list, correct_answers)]
