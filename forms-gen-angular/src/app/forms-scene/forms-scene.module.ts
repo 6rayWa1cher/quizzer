@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormEditorWrapperComponent } from './form-editor-wrapper/form-editor-wrapper.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsSceneService } from './forms-scene.service';
 
 
@@ -30,6 +31,7 @@ import { FormsSceneService } from './forms-scene.service';
         FormResponsesModule,
         FormViewModule,
         MatSidenavModule,
+        MatSnackBarModule,
         MatToolbarModule,
         MatIconModule,
         MatButtonModule,
