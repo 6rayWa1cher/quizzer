@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { lastValueFrom } from 'rxjs';
 import { FormDescriptionShort } from 'src/app/types/form_description_short';
 import { FormEditorWrapperComponent } from '../form-editor-wrapper/form-editor-wrapper.component';
+import { AIFormEditorWrapperComponent } from '../ai-form-editor-wrapper/ai-form-editor-wrapper.component';
 import { FormsSceneService } from '../forms-scene.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PendingFormDto } from 'src/app/types/pending_form_dto';
@@ -105,6 +106,15 @@ export class WindowComponent implements OnInit, OnChanges {
         } );
     }
 
+    create_new_ai_form () {
+        lastValueFrom( this.dialog.open( AIFormEditorWrapperComponent, {
+            width: '90%',
+            position: { top: '5vh' },
+            maxHeight: '90vh',
+        } ).afterClosed() ).then( () => {
+        } );
+    }
+    
     async rerender () {
         this.forms_ok_number = this.forms_list_short.length;
         this.forms_pending_number = this.pending_forms_list.length;

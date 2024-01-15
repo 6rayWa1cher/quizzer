@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RestService } from '../rest.service';
 import { FormDescriptionShort } from '../types/form_description_short';
+import { CreateAiForm } from '../types/create_ai_form';
 import { GetAllFormsDto } from '../types/get_all_forms';
 import { PendingFormDto } from '../types/pending_form_dto';
 
@@ -40,4 +41,9 @@ export class FormsSceneService {
             } );
         }
     }
+
+    generate_form (create_ai_form: CreateAiForm) {
+        return this.rest_service.send_request( create_ai_form, 'POST', 'form/generate' );
+    }
+
 }
