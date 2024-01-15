@@ -13,15 +13,9 @@ export class AIFormEditorComponent {
 
     @Input() prompt: string = '';
 
-    @Input() questions_count: number = 0;
+    @Input() questions_count: string = '0';
 
     @Output() close_request: EventEmitter<any> = new EventEmitter();
-
-    form: CreateAiForm = {
-        name: '',
-        prompt: '',
-        questions_count: 0,
-    };
 
     constructor (private forms_scene_service: FormsSceneService ) { }
 
@@ -30,7 +24,7 @@ export class AIFormEditorComponent {
     }
 
     send_request () {
-        this.forms_scene_service.generate_form( this.form ).then( () => {
+        this.forms_scene_service.generate_form( {name:this.name, prompt:this.prompt, questions_count:+this.questions_count} ).then( () => {
             this.close_editor();
         } );
     }
