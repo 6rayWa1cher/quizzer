@@ -1,6 +1,6 @@
 #  quizzer
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## About
 
@@ -118,12 +118,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Alstrasz"><img src="https://avatars.githubusercontent.com/u/47223797?v=4?s=100" width="100px;" alt="Andrew Lutsai"/><br /><sub><b>Andrew Lutsai</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=Alstrasz" title="Code">💻</a></td>
-
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/6rayWa1cher"><img src="https://avatars.githubusercontent.com/u/27364356?v=4?s=100" width="100px;" alt="Konstantin Grigorev"/><br /><sub><b>Konstantin Grigorev</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=6rayWa1cher" title="Code">💻</a> <a href="#projectManagement-6rayWa1cher" title="Project Management">📆</a></td>
-
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Alstrasz"><img src="https://avatars.githubusercontent.com/u/47223797?v=4?s=100" width="100px;" alt="Andrew Lutsai"/><br /><sub><b>Andrew Lutsai</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=Alstrasz" title="Code">💻</a> <a href="#infra-Alstrasz" title="Infra">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/6rayWa1cher"><img src="https://avatars.githubusercontent.com/u/27364356?v=4?s=100" width="100px;" alt="Konstantin Grigorev"/><br /><sub><b>Konstantin Grigorev</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=6rayWa1cher" title="Code">💻</a> <a href="#infra-Alstrasz" title="Infra">🚇</a> <a href="#projectManagement-6rayWa1cher" title="Project Management">📆</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/baranovatm"><img src="https://avatars.githubusercontent.com/u/56389893?v=4?s=100" width="100px;" alt="Tatiana"/><br /><sub><b>Tatiana</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=baranovatm" title="Code">💻</a> <a href="#design-baranovatm" title="Design">🎨</a></td>
-
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Throder-TVRS"><img src="https://avatars.githubusercontent.com/u/53103607?v=4?s=100" width="100px;" alt="Nikita Fomin"/><br /><sub><b>Nikita Fomin</b></sub></a><br /><a href="https://github.com/6rayWa1cher/quizzer/commits?author=Throder-TVRS" title="Code">💻</a> <a href="#research-Throder-TVRS" title="Research">🔬</a></td>
     </tr>
   </tbody>
