@@ -21,7 +21,7 @@ class CombinedModel:
                                                         device_map="auto",
                                                         trust_remote_code=False,
                                                         revision=revision)
-        self.llm = exllama_set_max_input_length(self.llm, max_input_length=8192)
+        # self.llm = exllama_set_max_input_length(self.llm, max_input_length=8192)
         self.llm_tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
         self.translator = Translator()
 
