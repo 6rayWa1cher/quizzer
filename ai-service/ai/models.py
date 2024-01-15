@@ -49,8 +49,8 @@ class CombinedModel:
         """ Совершает запрос к Google Translate.
          Возвращает перевод sentence на язык to. """
 
-        #return self.translator.translate(sentence, dest=to).text
-        return sentence
+        return self.translator.translate(sentence, dest=to).text
+        #return sentence
 
 
 class MockModel:

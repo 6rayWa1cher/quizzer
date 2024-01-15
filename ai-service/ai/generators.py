@@ -168,10 +168,9 @@ class PollGenerator:
 
             if rabbit_sender is not None:
                 rabbit_sender.generation_rabbit_update(rabbit_id, i + 1, len(questions))
-        print("stats", ">>>>>>>>>>>>>", statuses_list, "<<<<<<<<<<<<", flush=True)
-        print("ans", ">>>>>>>>>>>>>", answers_list, "<<<<<<<<<<<<", flush=True)
+
         return [{
-            "question": self.generator.model.translate_to(question, "ru"),
-            "answers": [self.generator.model.translate_to(answer, "ru") for answer in answers],
-            "correct_answer": self.generator.model.translate_to(answers[statuses.index(True)], "ru")
+            "question": question,
+            "answers": answers,
+            "correct_answer": answers[statuses.index(True)]
         } for question, answers, statuses in zip(questions, answers_list, statuses_list)]

@@ -88,9 +88,7 @@ class RabbitReceiver:
 
         def callback(ch, method, properties, body):
             msg_raw = body.decode()
-            print("ai.gen recv", msg_raw, flush=True)
             msg = json.loads(msg_raw)
-            print("ai.gen recv", msg, flush=True)
 
             questions = self.poll_generator.generate_poll(msg["prompt"],
                                                           msg["questions_count"],
