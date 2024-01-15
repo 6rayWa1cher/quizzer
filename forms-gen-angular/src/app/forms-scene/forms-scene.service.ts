@@ -4,6 +4,7 @@ import { RestService } from '../rest.service';
 import { FormDescriptionShort } from '../types/form_description_short';
 import { GetAllFormsDto } from '../types/get_all_forms';
 import { PendingFormDto } from '../types/pending_form_dto';
+import { GenerateFormDto } from '../types/generate_form_dto';
 
 @Injectable()
 export class FormsSceneService {
@@ -39,5 +40,9 @@ export class FormsSceneService {
                 this.delete_form_subject.next( JSON.parse( data ) );
             } );
         }
+    }
+
+    generate_form ( generate_form_dto: GenerateFormDto ): Promise<void> {
+        return this.rest_service.send_request( generate_form_dto, 'POST', 'form/generate' );
     }
 }

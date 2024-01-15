@@ -6,6 +6,7 @@ import { FormDescriptionShort } from 'src/app/types/form_description_short';
 import { FormEditorWrapperComponent } from '../form-editor-wrapper/form-editor-wrapper.component';
 import { FormsSceneService } from '../forms-scene.service';
 import { PendingFormDto } from 'src/app/types/pending_form_dto';
+import { GenerateFormEditorWrapperComponent } from '../generate-form-editor-wrapper/generate-form-editor-wrapper.component';
 
 @Component( {
     selector: 'forms-scene-window',
@@ -88,6 +89,22 @@ export class WindowComponent implements OnInit, OnChanges {
         lastValueFrom(
             this.dialog
                 .open( FormEditorWrapperComponent, {
+                    width: '90%',
+                    position: { top: '5vh' },
+                    maxHeight: '90vh',
+                } )
+                .afterClosed(),
+        ).then( () => {
+            // this.forms_scene_service.get_froms_short().then( ( val ) => {
+            //     this.forms_list_short = val;
+            // } );
+        } );
+    }
+
+    generate_form () {
+        lastValueFrom(
+            this.dialog
+                .open( GenerateFormEditorWrapperComponent, {
                     width: '90%',
                     position: { top: '5vh' },
                     maxHeight: '90vh',

@@ -16,6 +16,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormEditorWrapperComponent } from './form-editor-wrapper/form-editor-wrapper.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsSceneService } from './forms-scene.service';
+import { GenerateFormEditorWrapperComponent } from './generate-form-editor-wrapper/generate-form-editor-wrapper.component';
+import { GenerateFormEditorComponent } from './generate-form-editor/generate-form-editor.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { RestrictToNumbersDirective } from './directives/restrict-to-numbers.directive';
 
 
 @NgModule( {
@@ -23,6 +30,9 @@ import { FormsSceneService } from './forms-scene.service';
         WindowComponent,
         TabsComponent,
         FormEditorWrapperComponent,
+        GenerateFormEditorWrapperComponent,
+        GenerateFormEditorComponent,
+        RestrictToNumbersDirective,
     ],
     imports: [
         CommonModule,
@@ -38,6 +48,10 @@ import { FormsSceneService } from './forms-scene.service';
         MatDialogModule,
         MatProgressSpinnerModule,
         MatProgressBarModule,
+        MatCardModule,
+        MatFormFieldModule,
+        FormsModule,
+        MatInputModule,
     ],
     exports: [
         WindowComponent,

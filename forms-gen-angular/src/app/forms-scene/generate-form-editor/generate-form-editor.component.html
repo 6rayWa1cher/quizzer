@@ -1,0 +1,44 @@
+<div class="container mat-elevation-z2">
+    <mat-card>
+        <mat-card-title>
+            <mat-form-field class="title-input" appearance="fill">
+                <mat-label>Name</mat-label>
+                <input
+                    matInput
+                    placeholder="Book club poll"
+                    [(ngModel)]="generate_form_dto.name"
+                    maxlength="32"
+                >
+            </mat-form-field>
+        </mat-card-title>
+
+        <mat-card-content>
+            <mat-form-field class="description-textarea" appearance="fill">
+                <mat-label>Prompt</mat-label>
+                <textarea 
+                    matInput
+                    placeholder="Form dedicated to choosing books for the next reading session"
+                    maxlength="512"
+                    [(ngModel)]="generate_form_dto.prompt"
+                ></textarea>
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+            <mat-form-field class="question-count-input" appearance="fill">
+                <mat-label>Questions count</mat-label>
+                <input
+                    matInput
+                    type="number"
+                    placeholder="10"
+                    [(ngModel)]="generate_form_dto.questions_count"
+                    min="0" max="64"
+                    restrictToNumbers
+                >
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+            <button mat-button color="accent" (click)="send_generate_form()">Generate form</button>
+            <button mat-button *ngIf="closable" color="warn" (click)="close()">Close</button>
+        </mat-card-content>
+    </mat-card>
+</div>
