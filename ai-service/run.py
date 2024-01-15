@@ -16,7 +16,7 @@ def main() -> None:
 
     poll_generator: PollGenerator = PollGenerator(do_mock)
 
-    receiver: optional[RabbitReceiver] = None
+    receiver: RabbitReceiver | None = None
     for i in range(10):
         try:
             receiver = RabbitReceiver(poll_generator, rabbit_host)
