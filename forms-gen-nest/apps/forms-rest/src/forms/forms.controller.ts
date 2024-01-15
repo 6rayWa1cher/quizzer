@@ -100,10 +100,13 @@ export class FormsController {
             durable: false,
         }
     } )
-    async form_pending_update ( @RabbitPayload() data: PendingForm ) {
+    async form_pending_update ( @RabbitPayload() input: PendingForm ) {
+        console.log( 'rest_forms_controller_payload', input );
+        const data = new PendingFormDto( input );
+        console.log( 'rest_forms_controller_data', data );
         this.event_emitter.emit( 'sse.forward', {
             type: 'form.pending.update',
-            data: new PendingFormDto( data ),
+            data,
         } );
     }
 

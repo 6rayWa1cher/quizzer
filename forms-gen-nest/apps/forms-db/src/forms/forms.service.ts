@@ -232,8 +232,8 @@ export class FormsService {
         } );
     }
 
-    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<any> {
-        return this.prisma.pendingForm.updateMany( {
+    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<PendingForm> {
+        return this.prisma.pendingForm.update( {
             data: {
                 questions_done: generation_update_dto.questions_done,
             },

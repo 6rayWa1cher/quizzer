@@ -137,12 +137,16 @@ export class FormsController {
     } )
     async form_generation_update ( @RabbitPayload() data: GenerationUpdateDto ): Promise<PendingForm | null> {
         return this.forms_service.generation_update( data ).then( ( val ) => {
+            console.log( 'forms_controller_val', val );
             this.amqp_connection.publish(
                 EXCHANGES.SHARED_FORMS,
                 'form.pending.update',
                 val,
             );
             return val;
+        } ).catch( ( err ) => {
+            console.error( err );
+            return null;
         } );
     }
 

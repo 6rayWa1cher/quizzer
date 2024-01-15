@@ -19,11 +19,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsSceneService } from './forms-scene.service';
 import { AIFormEditorComponent } from './ai-form-editor/ai-form-editor';
-import { MatCardModule } from '@angular/material/card'
-import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-
+import { RestrictToNumbersDirective } from './directives/restrict-to-numbers.directive';
 
 @NgModule( {
     declarations: [
@@ -31,7 +31,8 @@ import { MatInputModule } from '@angular/material/input';
         TabsComponent,
         FormEditorWrapperComponent,
         AIFormEditorWrapperComponent,
-        AIFormEditorComponent
+        AIFormEditorComponent,
+        RestrictToNumbersDirective,
     ],
     imports: [
         CommonModule,
@@ -51,7 +52,7 @@ import { MatInputModule } from '@angular/material/input';
         MatFormFieldModule,
         FormsModule,
         MatInputModule,
-        MatProgressBarModule
+        MatProgressBarModule,
     ],
     exports: [
         WindowComponent,

@@ -9,9 +9,9 @@
         <mat-card-content>
             <mat-form-field class="description-textarea" appearance="fill">
                 <mat-label>Prompt</mat-label>
-                <textarea 
+                <textarea
                     class="description-textarea"
-                    matInput 
+                    matInput
                     placeholder="Specify the subject of your form"
                     maxlength="512"
                     [(ngModel)]="prompt"
@@ -21,11 +21,13 @@
         <mat-card-content>
             <mat-form-field class="number-textarea" appearance="fill">
                 <mat-label>Questions count</mat-label>
-                <textarea 
-                    matInput 
+                <input
+                    type="number"
+                    matInput
                     placeholder="Number of questions"
                     [(ngModel)]="questions_count"
-                ></textarea>
+                    restrictToNumbers
+                />
             </mat-form-field>
         </mat-card-content>
         <div>
