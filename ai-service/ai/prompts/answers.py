@@ -63,7 +63,7 @@ def ans_user_prompt_update_end(prev_prompt: str, new_answer: str, delim: str = '
     """ Дописывает к промпту ответ модели на предыдущую инструкцию.
     Нужно для последовательного ответа на вопросы с учётом контекста."""
 
-    return prev_prompt + delim + new_answer
+    return prev_prompt + delim + f"~@# {new_answer} ~@#"
 
 def parse_generated_answer(model_answer: str) -> str:
     """ Парсит ответ модели на промпт, возвращаемый функцией construct_ans_prompt.

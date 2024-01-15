@@ -42,7 +42,7 @@ class CombinedGenerator:
         new_answer = self.model.generate(prompt, generate_params)
         yield new_answer
 
-        prompt = ans_user_prompt_update_end(prompt, new_answer, delim="\n\n")
+        prompt = ans_user_prompt_update_end(prompt, parse_generated_answer(new_answer))
 
         for corr_state in correctness[1:]:
             prompt = ans_user_prompt_update_begin(prompt, question, corr_state)
@@ -50,7 +50,7 @@ class CombinedGenerator:
             new_answer = self.model.generate(prompt, generate_params)
             yield new_answer
 
-            prompt = ans_user_prompt_update_end(prompt, new_answer)
+            prompt = ans_user_prompt_update_end(prompt, parse_generated_answer(new_answer))
 
 
     def parse_answer(self, raw_answer: str) -> str:
