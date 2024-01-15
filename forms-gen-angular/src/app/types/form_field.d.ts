@@ -5,6 +5,7 @@ interface FormFieldAny {
     name: string;
     description: string;
     type: string;
+    correct_answer?: string
 }
 
 export interface FromFieldInput extends FormFieldAny {

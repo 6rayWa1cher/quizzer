@@ -12,9 +12,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormEditorWrapperComponent } from './form-editor-wrapper/form-editor-wrapper.component';
 import { AIFormEditorWrapperComponent } from './ai-form-editor-wrapper/ai-form-editor-wrapper.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsSceneService } from './forms-scene.service';
 import { AIFormEditorComponent } from './ai-form-editor/ai-form-editor';
 import { MatCardModule } from '@angular/material/card'
@@ -38,6 +40,7 @@ import { MatInputModule } from '@angular/material/input';
         FormViewModule,
         MatCardModule,
         MatSidenavModule,
+        MatSnackBarModule,
         MatToolbarModule,
         MatIconModule,
         MatButtonModule,
@@ -47,7 +50,8 @@ import { MatInputModule } from '@angular/material/input';
         MatProgressSpinnerModule,
         MatFormFieldModule,
         FormsModule,
-        MatInputModule
+        MatInputModule,
+        MatProgressBarModule
     ],
     exports: [
         WindowComponent,

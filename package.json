@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "docker:up": "docker compose --profile all up --build",
+    "docker:up:backend": "docker compose --profile backend up --build",
+    "docker:up:frontend": "docker compose --profile frontend up --build",
+    "docker:down": "docker compose --profile all down",
+    "docker:down:backend": "docker compose --profile backend down",
+    "docker:down:frontend": "docker compose --profile frontend down"
+  }
+}

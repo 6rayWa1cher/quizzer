@@ -3,3 +3,6 @@ install-deps:
 
 deploy-test:
 	ansible-playbook -i inventory main.yaml --limit test
+
+deploy-prod:
+	ansible-playbook -i inventory main.yaml --limit prod

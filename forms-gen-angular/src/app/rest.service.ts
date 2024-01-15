@@ -13,12 +13,13 @@ export class RestService {
 
     constructor ( private snack_bar: MatSnackBar ) { }
 
-    send_request ( data: any, method: 'GET' | 'POST' | 'PUT' | 'DELETE', path: string ) {
+    send_request ( data: any, method: 'GET' | 'POST' | 'PUT' | 'DELETE', path: string, params?: any ) {
         return axios( {
             method,
             baseURL: environment.api_url,
             url: path,
-            data,
+            data: data,
+            params: params,
         } )
             .then( ( res ) => {
                 return res.data;

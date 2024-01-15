@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Form" ALTER COLUMN "name" SET DATA TYPE VARCHAR(256);
+
+-- AlterTable
+ALTER TABLE "FormField" ALTER COLUMN "name" SET DATA TYPE VARCHAR(256);
+
+-- AlterTable
+ALTER TABLE "FormFieldOption" ALTER COLUMN "value" SET DATA TYPE VARCHAR(256);

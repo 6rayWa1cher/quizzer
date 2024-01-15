@@ -6,6 +6,9 @@ services:
         restart: "no"
         volumes:
             - ./forms-gen-nest:/app
+        profiles:
+          - "all"
+          - "backend"
         logging:
             options:
                 max-size: "50m"
@@ -19,11 +22,14 @@ services:
             options:
                 max-size: "50m"
         ports:
-                - "127.0.0.1:5432:5432"
+            - "127.0.0.1:5432:5432"
         environment:
             - POSTGRES_USER=root
             - POSTGRES_PASSWORD=root
             - POSTGRES_DB=test
+        profiles:
+          - "all"
+          - "backend"
         volumes:
             - ./db-data/:/var/lib/postgresql/data/
 
@@ -35,8 +41,11 @@ services:
             options:
                 max-size: "50m"
         ports:
-            - 5672:5672
-            - 15672:15672
+            - "5672:5672"
+            - "15672:15672"
+        profiles:
+          - "all"
+          - "backend"
         volumes:
             - ./rabbitmq-data/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - ./rabbitmq-data/mnesia/:/var/lib/rabbitmq/mnesia/
@@ -53,9 +62,13 @@ services:
         logging:
             options:
                 max-size: "50m"
+        profiles:
+          - "all"
+          - "backend"
         environment:
             - PORT=8080
             - HOST=0.0.0.0
+            - BASE_URL=http://localhost:3000
             - AMQP_URL=amqp://guest:guest@rabbitmq:5672
         ports:
             - 3000:8080
@@ -82,6 +95,9 @@ services:
             - AMQP_URL=amqp://rabbitmq:5672
         volumes:
             - ./forms-gen-nest:/app
+        profiles:
+          - "all"
+          - "backend"
         command: bash -c "echo migrating && npm run prisma:forms-db:migrate --prefix=/app && echo launching && npm run start:forms-db:dev --prefix=/app"
 
     angular:
@@ -95,4 +111,35 @@ services:
             - 4200:4200
         volumes:
             - ./forms-gen-angular:/app
+        profiles:
+          - "all"
+          - "frontend"
         command: bash -c "echo installing packages && npm install --prefix=/app && echo launching && npm run start:dev --prefix=/app"
+
+    ai-service:
+        build:
+            context: ./ai-service
+            dockerfile: Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_started
+        container_name: forms-ai-service
+        restart: "unless-stopped"
+        logging:
+            options:
+                max-size: "50m"
+        environment:
+            - AI_RABBIT_HOST=amqp://guest:guest@rabbitmq:5672/
+            - AI_SERVICE_DO_MOCK=${AI_SERVICE_DO_MOCK:-true}
+        volumes:
+          - ./ai-model-cache:/root/.cache/huggingface
+        profiles:
+          - "all"
+          - "backend"
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: all
+                          capabilities: [gpu]

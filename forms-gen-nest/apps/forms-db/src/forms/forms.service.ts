@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormDto } from 'apps/forms-rest/src/forms/dto/create_form.dto';
 import * as _ from 'lodash';
-import { CompleteForm, CompleteFormResponse, PrismaFormsService, ShortForm } from 'prisma-forms/prisma-forms';
+import { CompleteForm, CompleteFormResponse, PrismaFormsService, PendingForm, ShortForm } from 'prisma-forms/prisma-forms';
 import { Prisma } from '@internal/prisma-forms/client';
 import { CreateFormResponseDto } from 'apps/forms-rest/src/forms/dto/create_form_response.dto';
+import { GenerateFormDto } from 'apps/forms-rest/src/forms/dto/generate_form.dto';
+import { GenerationUpdateDto } from '../dto/generation_from_update.dto';
+import { GenerationCompleteDto } from '../dto/generation_from_complete.dto';
+import { AllFormsShortDto } from '../dto/all_forms_short.dto';
+import { GetFormByIdDto } from 'apps/forms-rest/src/forms/dto/get_form_by_id.dto';
+import { DeleteFormDto } from 'apps/forms-rest/src/forms/dto/delete_from.dto';
 
 @Injectable()
 export class FormsService {
@@ -13,6 +19,9 @@ export class FormsService {
         return this.prisma.formResponse.findMany( {
             where: {
                 form_id,
+                form: {
+                    form_status: 'ok',
+                },
             },
             orderBy: {
                 id: 'asc',
@@ -55,16 +64,14 @@ export class FormsService {
                 return null;
             }
 
-            const intersection_fields = _.intersectionBy(
-                create_form_response_dto.fields,
+            const intersection_fields = _( create_form_response_dto.fields as any ).concat(
                 _.map( form.fields, ( val ) => {
                     return {
                         form_field_id: val.id,
-                        data: '',
+                        correct_answer: val.correct_answer,
                     };
                 } ),
-                'form_field_id',
-            );
+            ).groupBy( 'form_field_id' ).reject( { length: 1 } as any ).map( _.spread( _.merge ) ).value() as any;
 
             const fields_to_create = _.map( intersection_fields, ( val ) => {
                 return {
@@ -77,10 +84,11 @@ export class FormsService {
                         },
                     },
                     data: val.data,
+                    correct_answer: val.correct_answer,
                 };
             } );
 
-            return prisma.formResponse.create( {
+            const inserted_fields = await prisma.formResponse.create( {
                 data: {
                     form: {
                         connect: {
@@ -99,18 +107,25 @@ export class FormsService {
                             },
                         },
                         include: {
-                            form_field: true,
+                            form_field: {
+                                include: {
+                                    options: true,
+                                },
+                            },
                         },
                     },
                 },
             } );
+
+            return inserted_fields;
         } );
     }
 
-    async get_form_by_id ( form_id: number ): Promise<CompleteForm | null> {
-        return this.prisma.form.findUnique( {
+    async get_form_by_id ( get_form_by_id_dto: GetFormByIdDto ): Promise<CompleteForm | null> {
+        const form = await this.prisma.form.findUnique( {
             where: {
-                id: form_id,
+                id: get_form_by_id_dto.id,
+                form_status: 'ok',
             },
             include: {
                 fields: {
@@ -131,14 +146,33 @@ export class FormsService {
                 },
             },
         } );
+
+        if ( !get_form_by_id_dto.include_correct_answers ) {
+            form.fields = _.map( form.fields, ( field ) => {
+                field.correct_answer = undefined;
+                return field;
+            } );
+        }
+
+        return form;
     }
 
-    async get_all_forms (): Promise<Array<ShortForm>> {
-        return this.prisma.form.findMany( {
+    async get_all_forms (): Promise<AllFormsShortDto> {
+        const forms = this.prisma.form.findMany( {
+            where: {
+                form_status: 'ok',
+            },
             orderBy: {
                 id: 'asc',
             },
         } );
+        const pending_forms = this.prisma.pendingForm.findMany( {
+            orderBy: {
+                id: 'asc',
+            },
+        } );
+
+        return new AllFormsShortDto( await forms, await pending_forms );
     }
 
     async create_form ( create_form_dto: CreateFormDto ): Promise<CompleteForm> {
@@ -184,6 +218,93 @@ export class FormsService {
                         },
                     },
                 },
+            },
+        } );
+    }
+
+    async generate_form ( generate_form_dto: GenerateFormDto ): Promise<PendingForm> {
+        return this.prisma.pendingForm.create( {
+            data: {
+                name: generate_form_dto.name,
+                prompt: generate_form_dto.prompt,
+                questions_count: generate_form_dto.questions_count,
+            },
+        } );
+    }
+
+    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<any> {
+        return this.prisma.pendingForm.updateMany( {
+            data: {
+                questions_done: generation_update_dto.questions_done,
+            },
+            where: {
+                id: generation_update_dto.id,
+            },
+        } );
+    }
+
+    async generation_complete ( generation_complete_dto: GenerationCompleteDto ): Promise<CompleteForm> {
+        return this.prisma.$transaction( async ( prisma ) => {
+            const pending_form = await prisma.pendingForm.delete( {
+                    where: {
+                        id: generation_complete_dto.id,
+                    },
+            } );
+
+            return prisma.form.create( {
+                data: {
+                    name: pending_form.name,
+                    description: pending_form.prompt,
+                    fields: {
+                        create: _.map( _.zip( _.range( generation_complete_dto.questions.length ), generation_complete_dto.questions ), ( i_question ) => {
+                            const ret: Prisma.FormCreateArgs['data']['fields']['create'] = {
+                                name: `Question #${i_question[0] + 1}`,
+                                description: i_question[1].question,
+                                type: 'select',
+                                correct_answer: i_question[1].correct_answer,
+
+                            };
+                            ret.options = {
+                                create: _.map( i_question[1].answers, ( answer ) => {
+                                    return {
+                                        value: answer,
+                                    };
+                                } ),
+                            };
+                            return ret;
+                        } ),
+                    },
+                    pending_id: generation_complete_dto.id,
+                },
+                include: {
+                    fields: {
+                        orderBy: {
+                            // ordering by autoinrement field so fields in same order as they were inserted.
+                            // Later seperate sort_order field might be added
+                            id: 'asc',
+                        },
+                        include: {
+                            options: {
+                                orderBy: {
+                                    // ordering by autoinrement field so fields in same order as they were inserted.
+                                    // Later seperate sort_order field might be added
+                                    id: 'asc',
+                                },
+                            },
+                        },
+                    },
+                },
+            } );
+        } );
+    }
+
+    async delete_form ( delete_form_dto: DeleteFormDto ): Promise<ShortForm> {
+        return this.prisma.form.update( {
+            where: {
+                id: delete_form_dto.form_id,
+            },
+            data: {
+                form_status: 'deleted',
             },
         } );
     }

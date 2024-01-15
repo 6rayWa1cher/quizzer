@@ -1,13 +1,22 @@
-<div class="centered-container" *ngIf="loading">
+<div class="centered-container" *ngIf="status == 'loading'">
     <mat-spinner></mat-spinner>
 </div>
 
-<ng-container *ngIf="!submitted && !loading">
+<ng-container *ngIf="status == 'ok'">
     <form-view-header [name]="form.name" [description]="form.description" [created_at]="form.created_at" [id]="form_id"></form-view-header>
     <form-view-fields-collection [fields]="form.fields" #fields></form-view-fields-collection>
-    <form-view-footer [closable]="false" (create_request)="form_response(fields.responses)"></form-view-footer>
+    <form-view-footer 
+        [closable]="false"
+        [can_be_deleted]="is_admin"
+        (create_request)="send_form_response(fields.responses)"
+        (delete_request)="delete_form()"
+    ></form-view-footer>
 </ng-container>
 
-<ng-container *ngIf="submitted">
-    <form-view-submitted></form-view-submitted>
+<ng-container *ngIf="status == 'submitted'">
+    <form-view-submitted [form_response]="form_response"></form-view-submitted>
+</ng-container>
+
+<ng-container *ngIf="status == 'deleted'">
+    <form-view-deleted></form-view-deleted>
 </ng-container>

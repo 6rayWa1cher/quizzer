@@ -6,12 +6,10 @@ import { FormFieldAnyDto, FormFieldDto, FormFieldInputDto, FormFieldSelectDto, F
 export class CreateFormDto {
     @ApiProperty()
     @IsString()
-    @MaxLength( 32 )
     name: string;
 
     @ApiProperty()
     @IsString()
-    @MaxLength( 512 )
     description: string;
 
     @ApiProperty( { type: () => FormFieldAnyDto } )

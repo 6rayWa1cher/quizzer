@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
-import { FormFieldResponseDto } from './form_response.dto';
+import { FormFieldResponseRequestDto } from './form_response_request.dto';
 
 export class CreateFormResponseDto {
-    @ApiProperty( { type: () => [FormFieldResponseDto] } )
+    @ApiProperty( { type: () => [FormFieldResponseRequestDto] } )
     @ValidateNested( { each: true } )
-    @Type( () => FormFieldResponseDto )
+    @Type( () => FormFieldResponseRequestDto )
     @IsArray()
-    fields: Array<FormFieldResponseDto>;
+    fields: Array<FormFieldResponseRequestDto>;
 }

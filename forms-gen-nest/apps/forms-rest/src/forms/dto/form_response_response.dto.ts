@@ -3,9 +3,10 @@ import * as _ from 'lodash';
 import { IsInt, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CompleteFormResponse } from 'prisma-forms/prisma-forms';
+import { FormFieldAnyDto } from './form_field.dto';
 
 @Exclude()
-export class FormResponseDto {
+export class FormResponseResponseDto {
     @ApiProperty()
     @Expose()
     id: number;
@@ -14,10 +15,10 @@ export class FormResponseDto {
     @Expose()
     form_id: number;
 
-    @ApiProperty( { type: () => [FormFieldResponseDto] } )
+    @ApiProperty( { type: () => [FormFieldResponseResponseDto] } )
     @Expose()
-    @Type( () => FormFieldResponseDto )
-    fields: Array<FormFieldResponseDto>;
+    @Type( () => FormFieldResponseResponseDto )
+    fields: Array<FormFieldResponseResponseDto>;
 
     @ApiProperty()
     @Expose()
@@ -26,28 +27,29 @@ export class FormResponseDto {
     constructor ( data: CompleteFormResponse ) {
         Object.assign( this, data );
         this.fields = _.map( data.fields, ( elem ) => {
-            return new FormFieldResponseDto( elem );
+            return new FormFieldResponseResponseDto( elem );
         } );
         this.created_at = data.created_at.valueOf();
     }
 }
 
 @Exclude()
-export class FormFieldResponseDto {
-    @ApiProperty()
-    @IsInt()
+export class FormFieldResponseResponseDto {
+    @ApiProperty( { type: () => FormFieldAnyDto } )
     @Expose()
-    form_field_id: number;
+    form_field: FormFieldAnyDto;
 
-    @ApiProperty( { required: false, description: 'It is not requiered for input, but always returned' } )
+    @ApiProperty()
     @Expose()
     name: string;
 
     @ApiProperty()
-    @IsString()
-    @MaxLength( 256 )
     @Expose()
     data: string;
+
+    @ApiProperty()
+    @Expose()
+    correct_answer: string;
 
     constructor ( data: CompleteFormResponse['fields'][0] ) {
         Object.assign( this, data );

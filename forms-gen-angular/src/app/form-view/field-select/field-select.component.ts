@@ -9,6 +9,7 @@ export class FieldSelectComponent implements OnInit {
     @Input() name: string = '';
     @Input() description: string = '';
     @Input() options: Array<string> = [];
+    @Input() correct_answer?: string;
 
     @Input() data: string = '';
     @Output() dataChange: EventEmitter<string> = new EventEmitter();

@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { FormFieldResponse } from 'src/app/types/form_field_response';
 import { Form } from '../../types/form';
 import { FormViewService } from '../form-view.service';
+import { FormResponse } from 'src/app/types/form_response';
 
 @Component( {
     selector: 'form-view-window',
@@ -10,17 +11,21 @@ import { FormViewService } from '../form-view.service';
     styleUrls: ['./window.component.scss'],
 } )
 export class WindowComponent implements OnInit {
-    loading: boolean = true;
+    status: 'loading' | 'ok' | 'submitted' | 'deleted' = 'loading';
+
     @Input() form_id!: number;
+    @Input() is_admin: boolean = false;
+
     form: Form = {
         id: -1,
         name: '',
         description: '',
         created_at: new Date( 0 ),
         fields: [],
+        form_status: 'ok',
     };
 
-    submitted: boolean = false;
+    form_response?: FormResponse = undefined;
 
     constructor ( private form_view_service: FormViewService ) { }
 
@@ -28,18 +33,26 @@ export class WindowComponent implements OnInit {
         if ( this.form_id == undefined ) {
             throw new Error( 'WindowComponent: form id undefined' );
         }
-        this.form_view_service.get_form_by_id( this.form_id )
+        this.form_view_service.get_form_by_id( this.form_id, this.is_admin )
             .then( ( val ) => {
                 this.form = val;
             } )
             .finally( () => {
-                this.loading = false;
+                this.status = 'ok';
             } ); ;
     }
 
-    form_response ( data: Array<FormFieldResponse> ) {
-        this.form_view_service.submit_form( data, this.form.id ).then( () => {
-            this.submitted = true;
+    send_form_response ( data: Array<FormFieldResponse> ) {
+        this.form_view_service.submit_form( data, this.form.id ).then( ( val ) => {
+            this.form_response = val;
+            this.status = 'submitted';
+            console.log( this.form_response );
+        } );
+    }
+
+    delete_form () {
+        this.form_view_service.delete_form_by_id( this.form.id ).then( () => {
+            this.status = 'deleted';
         } );
     }
 }

@@ -3,18 +3,21 @@
         *ngIf="field.type === 'input'" 
         [name]="field.name" 
         [description]="field.description"
+        [correct_answer]="field.correct_answer"
         [(data)]="responses[i].data"
     ></form-view-field-input>
     <form-view-field-textarea 
         *ngIf="field.type === 'textarea'" 
         [name]="field.name" 
         [description]="field.description" 
+        [correct_answer]="field.correct_answer"
         [(data)]="responses[i].data"
     ></form-view-field-textarea>
     <form-view-field-select 
         *ngIf="field.type === 'select'" 
         [name]="field.name" 
-        [description]="field.description" 
+        [description]="field.description"
+        [correct_answer]="field.correct_answer"
         [options]="field.options"
         [(data)]="responses[i].data"
     ></form-view-field-select>
