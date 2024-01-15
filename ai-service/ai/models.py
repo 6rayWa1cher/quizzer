@@ -14,7 +14,7 @@ class CombinedModel:
 
     def __init__(self):
         model_name_or_path = "TheBloke/Llama-2-13B-chat-GPTQ"
-        revision = "gptq-4bit-32g-actorder_True"
+        revision = "gptq-8bit--1g-actorder_True"
 
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.llm = AutoModelForCausalLM.from_pretrained(model_name_or_path,
