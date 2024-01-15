@@ -232,8 +232,8 @@ export class FormsService {
         } );
     }
 
-    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<PendingForm> {
-        return this.prisma.pendingForm.update( {
+    async generation_update ( generation_update_dto: GenerationUpdateDto ): Promise<any> {
+        return this.prisma.pendingForm.updateMany( {
             data: {
                 questions_done: generation_update_dto.questions_done,
             },
@@ -256,16 +256,16 @@ export class FormsService {
                     name: pending_form.name,
                     description: pending_form.prompt,
                     fields: {
-                        create: _.map( generation_complete_dto.questions, ( question ) => {
+                        create: _.map( _.zip( _.range( generation_complete_dto.questions.length ), generation_complete_dto.questions ), ( i_question ) => {
                             const ret: Prisma.FormCreateArgs['data']['fields']['create'] = {
-                                name: question.question,
-                                description: '',
+                                name: `Question #${i_question[0] + 1}`,
+                                description: i_question[1].question,
                                 type: 'select',
-                                correct_answer: question.correct_answer,
+                                correct_answer: i_question[1].correct_answer,
 
                             };
                             ret.options = {
-                                create: _.map( question.answers, ( answer ) => {
+                                create: _.map( i_question[1].answers, ( answer ) => {
                                     return {
                                         value: answer,
                                     };

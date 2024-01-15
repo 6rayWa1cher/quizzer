@@ -14,7 +14,10 @@ export class FormViewService {
             },
             'POST',
             `form/${form_id}/response`,
-        );
+        ).then( ( val ) => {
+            val.created_at = new Date( val.created_at );
+            return val;
+        } );
     }
 
     async get_form_by_id ( form_id: number, is_admin: boolean ): Promise<Form> {

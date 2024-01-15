@@ -23,6 +23,7 @@ import { FormResponsesService } from './form-responses.service';
     ],
     exports: [
         WindowComponent,
+        ResponseBoxComponent,
     ],
     providers: [
         FormResponsesService,

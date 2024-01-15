@@ -13,16 +13,31 @@
     <mat-card-content>
         <table mat-table [dataSource]="response.fields" class="table">
             <ng-container matColumnDef="index">
-                <th mat-header-cell *matHeaderCellDef class="tabe_index_column_header"> Field # </th>
+                <th mat-header-cell *matHeaderCellDef> Field # </th>
                 <td mat-cell *matCellDef="let element; let i = index;"> {{i}} </td>
             </ng-container>
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef class="tabe_column_header"> Field name </th>
+                <th mat-header-cell *matHeaderCellDef> Field name </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
             </ng-container>
             <ng-container matColumnDef="data">
-                <th mat-header-cell *matHeaderCellDef class="tabe_column_header"> Data </th>
-                <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+                <th mat-header-cell *matHeaderCellDef > Data </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{'color_red': answer_color(element) === 'red', 'color_green': answer_color(element) === 'green'}">
+                    {{element.data}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="correct_answer">
+                <th mat-header-cell *matHeaderCellDef> Correct answer </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.correct_answer != undefined; else no_correct_answer">
+                        {{element.correct_answer}}
+                    </div>
+                    <ng-template #no_correct_answer>
+                        <div>
+                            <i>No correct answer</i>
+                        </div>
+                    </ng-template>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayed_columns"></tr>

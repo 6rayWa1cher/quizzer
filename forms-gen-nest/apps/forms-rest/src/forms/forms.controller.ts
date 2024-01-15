@@ -107,7 +107,7 @@ export class FormsController {
         } );
     }
 
-    @ApiOperation( { summary: 'Generate form using 🦄ai🦄' } )
+    @ApiOperation( { summary: 'Delete form' } )
     @ApiCreatedResponse()
     @Delete( ':id' )
     async delete ( @Param( 'id', new ParseIntPipe() ) id: number ): Promise<void> {

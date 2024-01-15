@@ -8,13 +8,13 @@
     <form-view-footer 
         [closable]="false"
         [can_be_deleted]="is_admin"
-        (create_request)="form_response(fields.responses)"
+        (create_request)="send_form_response(fields.responses)"
         (delete_request)="delete_form()"
     ></form-view-footer>
 </ng-container>
 
 <ng-container *ngIf="status == 'submitted'">
-    <form-view-submitted></form-view-submitted>
+    <form-view-submitted [form_response]="form_response"></form-view-submitted>
 </ng-container>
 
 <ng-container *ngIf="status == 'deleted'">
