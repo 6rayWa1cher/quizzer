@@ -1,6 +1,8 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 
+const flatRate = 1000;
+
 export const options = {
   thresholds: {
     http_req_failed: ['rate<0.5'],
@@ -11,10 +13,12 @@ export const options = {
       exec: 'get_forms',
       startVUs: 0,
       stages: [
-        { duration: '15s', target: 500 },
-        { duration: '60s', target: 501 },
+        { duration: '15s', target: flatRate },
+        { duration: '60s', target: flatRate + 1 },
         { duration: '60s', target: 1750 },
-        { duration: '10s', target: 0 },
+        { duration: '15s', target: flatRate },
+        { duration: '60s', target: flatRate + 1 },
+        { duration: '1s', target: 0 },
       ],
       executor: 'ramping-vus'
     }
