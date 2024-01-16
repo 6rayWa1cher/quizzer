@@ -1,0 +1,55 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "Alstrasz",
+      "name": "Andrew Lutsai",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47223797?v=4",
+      "profile": "https://github.com/Alstrasz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "6rayWa1cher",
+      "name": "Konstantin Grigorev",
+      "avatar_url": "https://avatars.githubusercontent.com/u/27364356?v=4",
+      "profile": "https://github.com/6rayWa1cher",
+      "contributions": [
+        "code",
+        "projectManagement"
+      ]
+    },
+      "login": "baranovatm",
+      "name": "Tatiana",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56389893?v=4",
+      "profile": "https://github.com/baranovatm",
+      "contributions": [
+        "code",
+        "design"
+      ]
+    },
+    {
+      "login": "Throder-TVRS",
+      "name": "Nikita Fomin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53103607?v=4",
+      "profile": "https://github.com/Throder-TVRS",
+      "contributions": [
+        "code",
+        "research"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "quizzer",
+  "projectOwner": "6rayWa1cher"
+}
